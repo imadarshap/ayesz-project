@@ -11,6 +11,7 @@
 # Laravel 5 & Lumen specific
 /source/public/storage
 /source/public/hot
+/source/storage/
 
 # Laravel 5 & Lumen specific with changed public path
 
