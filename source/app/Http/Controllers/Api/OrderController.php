@@ -455,21 +455,33 @@ class OrderController extends Controller
                     
                 $body = json_encode(array('message'=>$notification_text,'cart_id'=>$cart_id));
                     $notification = [
-                        'title' => $notification_title,
-                        'body' => $cart_id,
+                        'title' => "New Order",
+                        'body' => "You Got a new order",
                         'android_channel_id'=>'AyesZ_Vendor_Notifications',
                         'sound' => "default",
                     ];
                     
-                    $extraNotificationData = ["cart_id" => $cart_id];
+                     $extraNotificationData = [
+                        "store_id"=>$store_id,
+                        "cart_id" => $cart_id,
+                        'title' => "New Order",
+                        'body' => $notification_text,
+                        ];
         
                     $fcmNotification = [
                         'to'        => $token,
-                        'notification' => $notification,
                         'data' => $extraNotificationData,
                         'content_available' => false, //important for iOS
                         'priority' => "high",
-                        'time_to_live' => 50000
+                        // 'time_to_live' => 5000,
+                        'requireInteraction'=> true,
+                        'actions'=> [
+                            'action'=> "accept",
+                            'title'=> "Accept"
+                        ],[
+                            'action'=> "reject",
+                            'title'=> "Reject"
+                        ]
                     ];
         
                     $headers = [

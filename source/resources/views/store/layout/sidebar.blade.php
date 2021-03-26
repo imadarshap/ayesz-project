@@ -10,6 +10,16 @@
         </a></div>
       <div class="sidebar-wrapper">
         <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:void(0)">
+                    <i class="material-icons">view</i>
+                        <form action="{{route('change_status')}}" method="post" id="statusForm">
+                            {{csrf_field()}}
+                        <p><input type="checkbox" name="status" class="js-switch" onchange="$('#statusForm').submit()" @if($store->availability==1) checked @endif/>
+                        Available</p>
+                        </form>
+                </a>
+          </li>
           <li class="nav-item {{ (request()->is('store/home')) ? 'active' : '' }}">
             <a class="nav-link" href="{{route('storeHome')}}">
               <i class="material-icons">dashboard</i>
@@ -71,7 +81,12 @@
           </li>
           
          
-          
+          <li class="nav-item {{ (request()->is('store/settings')) ? 'active' : '' }}">
+            <a class="nav-link" href="{{route('settings')}}">
+              <i class="material-icons">settings</i>
+              <p>Settings</p>
+            </a>
+          </li>
            
          
         </ul>

@@ -39,18 +39,18 @@ class ProductController extends Controller
             $ch2 = $ch->varient_id;
             $ch3[] = array($ch2);
         }
-          $products = DB::table('product_varient')
+            $products = DB::table('product_varient')
                 ->join('product','product_varient.product_id', '=', 'product.product_id')
                 ->whereNotIn('product_varient.varient_id', $ch3)
                 ->get();    
         
-    	return view('store.products.select', compact('title',"store", "logo","products","selected"));
+    	    return view('store.products.select', compact('title',"store", "logo","products","selected"));
         }else{
-             $products = DB::table('product_varient')
+            $products = DB::table('product_varient')
                 ->join('product','product_varient.product_id', '=', 'product.product_id')
                 ->get();
                 
-            return view('store.products.select', compact('title',"store", "logo","products","selected"));    
+            return view('store.products.select', compact('title',"store", "logo","products","selected"));
         }
       
     }

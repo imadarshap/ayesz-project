@@ -70,3 +70,4 @@
 [19-Feb-2021 19:11:58 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 90193920 bytes) in /home/techrly1/public_html/ayesz.in/source/storage/framework/views/a7d74bb3cf2ea8b3f96827ae610bd6f391011581.php on line 73
 [19-Feb-2021 19:11:58 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 90689536 bytes) in /home/techrly1/public_html/ayesz.in/source/vendor/symfony/http-foundation/Response.php on line 368
 [19-Feb-2021 19:11:58 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 90181632 bytes) in Unknown on line 0
+[26-Mar-2021 12:35:49 Asia/Kolkata] PHP Fatal error:  Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in /home1/artifrjc/ayesz.in/source/app/Http/Controllers/Store/SettingsController.php on line 37

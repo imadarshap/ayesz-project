@@ -26,18 +26,15 @@ Route::group(['prefix'=>'web', ['middleware' => ['XSS']], 'namespace'=>'Web'], f
 	Route::post('registration','RegisterController@usersignup')->name('user_registration');
     Route::post('registration/otp_verify','RegisterController@web_verify_otp')->name('web_verify_otp');
     
-    
    	Route::group(['middleware'=>'bamaCust'], function(){
    	
-   	Route::get('about', 'WebHomeController@aboutus')->name('webabout');   
-   	Route::get('terms', 'WebHomeController@terms')->name('terms'); 
+   	Route::get('about', 'WebHomeController@aboutus')->name('webabout');
+   	Route::get('terms', 'WebHomeController@terms')->name('terms');
 	Route::get('home/', 'WebHomeController@web')->name('webhome');
 	
 	Route::get('products', 'AllProductController@products')->name('products');
     Route::get('products/{cat_id}','AllProductController@cate')->name('catee');
     Route::get('user/logout', 'UserloginController@logout')->name('userlogout');
-    
-
 	});
 });
 
@@ -353,6 +350,9 @@ Route::group(['prefix'=>'store', ['middleware' => ['XSS']], 'namespace'=>'Store'
 	 Route::get('bulk/upload', 'ImpexcelController@bulkup')->name('bulkuprice');   
      Route::post('bulk_upload/price', 'ImpexcelController@import')->name('bulk_uploadprice');
      Route::post('bulk_upload/stock', 'ImpexcelController@importstock')->name('bulk_uploadstock');
+     
+     Route::get('settings', 'SettingsController@settings')->name('settings');
+     Route::post('set_availability', 'SettingsController@set_availability')->name('set_availability');
+     Route::post('change_status', 'SettingsController@change_status')->name('change_status');
 	});
-	
 });

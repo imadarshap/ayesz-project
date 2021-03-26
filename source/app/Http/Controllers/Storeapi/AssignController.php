@@ -133,12 +133,27 @@ class AssignController extends Controller
                         'sound' => true,
                     ];
                     
-                    $extraNotificationData = ["message" => $notification];
+                    $extraNotificationData = [
+                        "dboy_id"=>$dboyid,
+                        "cart_id" => $cart_id,
+                        'title' => "New Delivery Order",
+                        'body' => $notification_text,
+                        ];
         
                     $fcmNotification = [
                         'to'        => $token,
-                        'notification' => $notification,
                         'data' => $extraNotificationData,
+                        'content_available' => false, //important for iOS
+                        'priority' => "high",
+                        // 'time_to_live' => 5000,
+                        'requireInteraction'=> true,
+                        'actions'=> [
+                            'action'=> "accept",
+                            'title'=> "Accept"
+                        ],[
+                            'action'=> "reject",
+                            'title'=> "Reject"
+                        ]
                     ];
         
                     $headers = [

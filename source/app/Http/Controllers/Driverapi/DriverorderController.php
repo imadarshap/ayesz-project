@@ -23,7 +23,6 @@ class DriverorderController extends Controller
 	                ->where('cart_id',$cart_id)
 	                ->first();
     	
-    	
         $store_id = $orr->store_id;
         $user_id=$orr->user_id;
        	$var= DB::table('store_orders')
@@ -67,7 +66,7 @@ class DriverorderController extends Controller
  		   
        			if($orderconfirm){
 	               	$notification_title = "You Got a New Order for Delivery on ".$orr->delivery_date;
-	           	    $notification_text = "you got an order with cart id #".$cart_id." of price ".$curr->currency_sign." " .$orr->total_price. ". It will have to delivered on ".$orr->delivery_date." between ".$orr->time_slot.".";
+	           	    $notification_text = "you got an order with cart id #".$cart_id." of price ".$curr->currency_sign." " .$orr->total_price. ".\n It will have to delivered on ".$orr->delivery_date;
                 
    	    	        $date = date('d-m-Y');
     	            $getUser = DB::table('delivery_boy')->get();
@@ -94,12 +93,27 @@ class DriverorderController extends Controller
                        	'sound' => true,
                    	];
                     
-	                $extraNotificationData = ["message" => $notification];
+	                $extraNotificationData = [
+                        "dboy_id"=>$dboyid,
+                        "cart_id" => $cart_id,
+                        'title' => "New Delivery Order",
+                        'body' => $notification_text,
+                        ];
         
-  	                $fcmNotification = [
-	       	            'to'        => $token,
-	           	        'notification' => $notification,
+                    $fcmNotification = [
+                        'to'        => $token,
                         'data' => $extraNotificationData,
+                        'content_available' => false, //important for iOS
+                        'priority' => "high",
+                        // 'time_to_live' => 5000,
+                        'requireInteraction'=> true,
+                        'actions'=> [
+                            'action'=> "accept",
+                            'title'=> "Accept"
+                        ],[
+                            'action'=> "reject",
+                            'title'=> "Reject"
+                        ]
                     ];
         
     	            $headers = [
