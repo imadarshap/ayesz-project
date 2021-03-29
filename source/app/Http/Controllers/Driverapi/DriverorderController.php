@@ -55,6 +55,7 @@ class DriverorderController extends Controller
 				->whereNotIn('dboy_id', function ($query) {
         			$query->select('dboy_id')->from('delivery_rejected');
     			})
+    			->where('delivery_boy.status',1)
        			->orderBy('distance')
        			->first();
            		    
@@ -199,7 +200,7 @@ class DriverorderController extends Controller
              ->join('store', 'orders.store_id', '=', 'store.store_id')
              ->join('address', 'orders.address_id','=','address.address_id')
              ->join('delivery_boy', 'orders.dboy_id', '=','delivery_boy.dboy_id')
-             ->select('orders.order_status','orders.cart_id','users.user_name', 'users.user_phone', 'orders.delivery_date', 'orders.total_price','orders.delivery_charge','orders.rem_price','orders.payment_status','orders.payment_method','delivery_boy.boy_name','delivery_boy.boy_phone','orders.time_slot', 'store.address as store_address', 'store.store_name','store.phone_number','store.lat as store_lat','store.lng as store_lng','address.lat as userlat', 'address.lng as userlng', 'delivery_boy.lat as dboy_lat', 'delivery_boy.lng as dboy_lng', 'address.receiver_name', 'address.receiver_phone', 'address.city','address.society','address.house_no','address.landmark','address.state',)
+             ->select('orders.order_status','orders.cart_id','users.user_name', 'users.user_phone', 'orders.delivery_date', 'orders.total_price','orders.delivery_charge','orders.rem_price','orders.payment_status','orders.payment_method','delivery_boy.boy_name','delivery_boy.boy_phone','orders.time_slot', 'store.address as store_address', 'store.store_name','store.phone_number','store.lat as store_lat','store.lng as store_lng','address.lat as userlat', 'address.lng as userlng', 'delivery_boy.lat as dboy_lat', 'delivery_boy.lng as dboy_lng', 'address.receiver_name', 'address.receiver_phone', 'address.city','address.society','address.house_no','address.landmark','address.state')
              ->where('orders.order_status','!=', 'completed')
              ->where('orders.store_id','!=',0)
              ->where('orders.dboy_id',$dboy_id)

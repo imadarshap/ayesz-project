@@ -1,4 +1,4 @@
-      <footer class="footer">
+      <footer class="footer" @if(!empty($mobile)) style="display:none" @endif>
         <div class="container-fluid">
           <div class="copyright float-right">
             &copy;

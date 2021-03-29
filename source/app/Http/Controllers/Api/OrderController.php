@@ -8,6 +8,8 @@ use DB;
 use Carbon\Carbon;
 use App\Traits\SendMail;
 use App\Traits\SendSms;
+use DateTime;
+use App\Helper\Helper;
 
 class OrderController extends Controller
 {
@@ -20,10 +22,91 @@ class OrderController extends Controller
         $user_id= $request->user_id;
         $store_id = $request->store_id;
         
-        
-        $del_charge = $this->get_delivery_charge($user_id,$store_id,$data_array);
-        $message = array('status'=>'1', 'message'=>'Delivery Charge','del_charge'=>$del_charge);
-        return $message;
+        $open = true;
+        $openTime = "is closed now";
+        $store = DB::table('store')->where('store_id',$store_id)->first();
+        $avails = DB::table('vendor_availability')->where('store_id',$store_id)->where('day',strtolower(date('D')))->first();
+        $st_time = null;
+        if(!empty($avails) && $avails->status==1){
+            $start_time = explode(',',$avails->start_time);
+            $end_time = explode(',',$avails->end_time);
+            if($start_time[0]=='24'){
+                $open = true;
+            }else{
+                for($i=0; $i < sizeof($start_time) ; $i++){
+                    $curr_time = new DateTime("now");
+                    $st_time = new DateTime(date('Y-m-d').' '.$start_time[$i].':00');
+                    $en_time = new DateTime(date('Y-m-d').' '.$end_time[$i].':00');
+                    
+                    if($curr_time < $st_time){
+                        $open = false;
+                        break;
+                    }
+                    if($curr_time >$st_time && $curr_time < $en_time)
+                    {
+                        $open = true;
+                        break;
+                    }else{
+                        $open = false;
+                    }
+                }
+            }
+        }else if(!empty($avails)){
+            $open = false;
+        }
+        if($store->availability==0){
+            $open = false;
+        }
+        if(!$open){
+            $curr_time = new DateTime("now");
+            if($st_time != null && $curr_time < $st_time){
+                $openTime = "will open at ".$st_time->format('h:i a');
+            }else{
+                $avails = DB::table('vendor_availability')->where('store_id',$store_id)->get();
+                $start = false;
+                $will_open = false;
+                for($i=0;$i < count($avails);$i++){
+                    if($start){
+                        if($avails[$i]->status==1){
+                            $start_time = explode(',',$avails[$i]->start_time);
+                            if($start_time[0]=='24'){
+                                $openTime = "will open at 12:00 AM";
+                            }else if(count($start_time)>0){ 
+                                $st_time = new DateTime(date('Y-m-d').' '.$start_time[0].':00');
+                                if(strtolower(date('D',strtotime(' +1 day')))==$avails[$i]->day)
+                                    $openTime = "will open tomorrow at ".$st_time->format('h:i a');
+                                else
+                                    $openTime = "will open on ".getFullDay($avails[$i]->day)." at ".$st_time->format('h:i a');
+                            }
+                            $will_open = true;
+                            break;
+                        }
+                    }
+                    if($avails[$i]->day==strtolower(date('D'))){
+                        $start = !$start;  
+                        if($start==false){
+                            break;
+                        }
+                    }
+                    if($i==count($avails)-1){
+                        $i=-1;
+                    } 
+                }
+                if(!$will_open){
+                    $openTime = 'is temporarily closed';
+                }
+            }
+            $message = array('status'=>'0', 'message'=>'Please update your App to continue.','open_time'=>'Store '.$openTime);
+            return $message;
+        }else{
+            $del_charge = $this->get_delivery_charge($user_id,$store_id,$data_array);
+            if($del_charge == "false"){
+                $message = array('status'=>'0', 'message'=>'Please select any address.');
+            }else{
+                $message = array('status'=>'1', 'message'=>'Delivery Charge','del_charge'=>$del_charge);
+            }
+            return $message;
+        }
     }
     
     function get_delivery_charge($user_id,$store_id,$data_array){
@@ -34,8 +117,7 @@ class OrderController extends Controller
             ->where('select_status', 1)
             ->first();
        if(!$user ){
-           	$message = array('status'=>'0', 'message'=>'Select any Address - '.json_encode($request));
-        	return $message;
+           	return "false";
        }
        $cart_price = 0.0;
        $weight = 0.0;

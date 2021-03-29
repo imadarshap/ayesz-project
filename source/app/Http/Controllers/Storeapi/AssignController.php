@@ -26,11 +26,10 @@ class AssignController extends Controller
             * sin(radians(delivery_boy.lat))) AS distance"))
            ->groupBy("delivery_boy.boy_name","delivery_boy.dboy_id","delivery_boy.lat","delivery_boy.lng","delivery_boy.boy_city")
            ->where('delivery_boy.boy_city', $store->city)
-           ->where('delivery_boy.status','1')
+           ->where('delivery_boy.status',1)
            ->orderBy('distance')
            ->get();
           
-           
     if (count($nearbydboy)>0){
         if(count($nearbydboy)==1){
             return $this->assignOrder($store_id,$cart_id,$nearbydboy[0]->dboy_id);

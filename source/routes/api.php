@@ -183,6 +183,7 @@ Route::group(['prefix'=>'store', ['middleware' => ['XSS']], 'namespace'=>'Storea
    /////search api
     Route::post('todayordersearch', 'StoreordersearchController@todaysearch');
     Route::post('nextdayordersearch', 'StoreordersearchController@nextdaysearch');
+    Route::post('update_status', 'StoreStatusController@update_status');
 });
 
 

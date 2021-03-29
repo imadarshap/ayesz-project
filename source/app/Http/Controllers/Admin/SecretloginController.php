@@ -9,7 +9,7 @@ use Session;
 
 class SecretloginController extends Controller
 {
- public function secretlogin(Request $request)
+    public function secretlogin(Request $request)
     {
         $id=$request->id;
         $checkstoreLogin = DB::table('store')
@@ -26,5 +26,4 @@ class SecretloginController extends Controller
          	 return redirect()->back()->withErrors('Something Wents Wrong');
          }
     }
-    
 }

@@ -32,6 +32,7 @@ class ReportController extends Controller
                 ->select('user_name');
             })->leftJoin('delivery_boy','delivery_boy.dboy_id','orders.dboy_id')
         	->leftJoin('store_orders','store_orders.order_cart_id','=','orders.cart_id')
+        	->where('orders.payment_method','!=',NULL)
         		->select('*',DB::raw('((orders.price_without_delivery/100)*store.admin_share) as commission'));
     
     	$stores = array();
@@ -142,6 +143,7 @@ class ReportController extends Controller
                 ->select('user_name');
             })->leftJoin('delivery_boy','delivery_boy.dboy_id','orders.dboy_id')
         	->leftJoin('store_orders','store_orders.order_cart_id','=','orders.cart_id')
+        	->where('orders.payment_method','!=',NULL)
         		->select('*',DB::raw('((orders.price_without_delivery/100)*store.admin_share) as commission'));
     
     	if(!empty($city)){
@@ -242,6 +244,7 @@ class ReportController extends Controller
             	$join->on('b.order_cart_id','=','orders.cart_id')
             	->groupby('order_cart_id');
             })
+            ->where('orders.payment_method','!=',NULL)
         	->select('*',DB::raw('((orders.price_without_delivery/100)*store.admin_share) as commission'),DB::raw('SUM(qty) as qtysum'));
     		
     	$stores = array();
@@ -354,6 +357,7 @@ class ReportController extends Controller
                 $join->on('b.order_cart_id','=','orders.cart_id')
                 ->groupby('order_cart_id');
             })
+            ->where('orders.payment_method','!=',NULL)
             ->select('*',DB::raw('((orders.price_without_delivery/100)*store.admin_share) as commission'),DB::raw('SUM(qty) as qtysum'));
             
         $stores = array();
@@ -467,6 +471,7 @@ class ReportController extends Controller
                 $join->on('b.order_cart_id','=','orders.cart_id')
                 ->groupby('order_cart_id');
             })
+            ->where('orders.payment_method','!=',NULL)
             ->select('*',DB::raw('((orders.price_without_delivery/100)*store.admin_share) as commission'),DB::raw('SUM(qty) as qtysum'));
             
         $stores = array();
@@ -580,6 +585,7 @@ class ReportController extends Controller
             	$join->on('b.order_cart_id','=','orders.cart_id')
             	->groupby('order_cart_id');
             })
+            ->where('orders.payment_method','!=',NULL)
         	->select('*',DB::raw('((orders.price_without_delivery/100)*store.admin_share) as commission'),DB::raw('SUM(qty) as qtysum'));
     		
     	$dboys = array();
@@ -685,6 +691,7 @@ class ReportController extends Controller
             	$join->on('b.order_cart_id','=','orders.cart_id')
             	->groupby('order_cart_id');
             })
+            ->where('orders.payment_method','!=',NULL)
         	->select('*',DB::raw('((orders.price_without_delivery/100)*store.admin_share) as commission'),DB::raw('SUM(qty) as qtysum'));
     		
     	$dboys = array();
@@ -789,6 +796,7 @@ class ReportController extends Controller
             	$join->on('b.order_cart_id','=','orders.cart_id')
             	->groupby('order_cart_id');
             })
+            ->where('orders.payment_method','!=',NULL)
         	->select('*',DB::raw('((orders.price_without_delivery/100)*store.admin_share) as commission'),DB::raw('SUM(qty) as qtysum'));
     		
     	$stores = array();
@@ -899,6 +907,7 @@ class ReportController extends Controller
             	$join->on('b.order_cart_id','=','orders.cart_id')
             	->groupby('order_cart_id');
             })
+            ->where('orders.payment_method','!=',NULL)
         	->select('*',DB::raw('((orders.price_without_delivery/100)*store.admin_share) as commission'),DB::raw('SUM(qty) as qtysum'));
     		
     	$dboys = array();
@@ -987,7 +996,7 @@ class ReportController extends Controller
     	$dboys = $request->delivery_boy;
     	$fromDate = $request->fromdate;
     	$toDate = $request->todate;
-    	$orders = DB::table('orders');
+    	$orders = DB::table('orders')->where('orders.payment_method','!=',NULL);
     
     	
     	if(empty($stores)&&empty($dboys)){

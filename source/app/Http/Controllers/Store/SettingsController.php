@@ -22,8 +22,10 @@ class SettingsController extends Controller
         $logo = DB::table('tbl_web_setting')
                 ->where('set_id', '1')
                 ->first();
+                
+        $mobile=Session::get('bamaStoreMobile');
         
-        return view('store.settings.settings', compact('title',"store", "logo",'avails'));
+        return view('store.settings.settings', compact('title',"store", "logo",'avails','mobile'));
     }
     public function set_availability(Request $request){
         $email=Session::get('bamaStore');

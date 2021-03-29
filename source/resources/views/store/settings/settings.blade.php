@@ -39,6 +39,47 @@ label {
 .day label{
     width:120px;
 }
+.btn-outline-danger{
+    width: 40px !important;
+    height: 40px !important;
+    padding: 0px !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+.btn-outline-danger i{
+    margin:0px !important;
+    font-size:24px !important;
+}
+@if(!empty($mobile))
+
+.content{
+    margin:0px !important;
+    padding:0px !important;
+}
+.content .container-fluid{
+    padding:0px !important;
+}
+.card{
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+.card-header{
+    display:none !important;
+}
+.card-body{
+    height: 100vh !important;
+}
+.btn-primary{
+    background: #4CAF50 !important;
+    width: 100% !important;
+    font-size:16px !important;
+}
+
+.alert{
+    margin-bottom:0pc !important;
+}
+@endif
 </style>
  <div class="container-fluid">
           <div class="row">
@@ -99,9 +140,9 @@ label {
                                     @endphp
                                     @for($j=0;$j < count($start_time);$j++)
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-4 col-md-3">
                                             <div class="form-group">
-                                                <select class="form-control start_time" name="{{$day}}_from[]" onchange="changeHour(this,1)" required>
+                                                <select class="form-control start_time" name="{{$day}}_start[]" onchange="changeHour(this,1)" required>
                                                     <option value=""></option>
                                                     <option value="24" @if($start_time[$j]=='24') selected @endif>24 Hours</option>
                                                     @foreach($hours as $hour)
@@ -110,8 +151,8 @@ label {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="divider">-</div>
-                                        <div class="col-md-3" >
+                                        <div class="col-1 col-md-1 divider">-</div>
+                                        <div class="col-4 col-md-3" >
                                             <div class="form-group">
                                                 <select class="form-control end_time" name="{{$day}}_end[]" onchange="changeHour(this,2)" @if($start_time[$j]=='24') style="display:none" @else required @endif >
                                                     <option value=""></option>
@@ -122,14 +163,16 @@ label {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div>
-                                            <button type="button" class="btn btn-outline-danger btn-sm btn-close" onclick="removeHour(this);">X</button>
+                                        @if($j>0)
+                                        <div class="col-2 col-md-2">
+                                            <button type="button" class="btn btn-outline-danger btn-sm btn-close" onclick="removeHour(this);"><i class="material-icons">close</i></button>
                                         </div>
+                                        @endif
                                     </div>
                                     @endfor
                                     @else
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-4 col-md-3">
                                             <div class="form-group">
                                                 <select class="form-control start_time" name="{{$day}}_start[]" onchange="changeHour(this,2)">
                                                     <option value=""></option>  
@@ -140,8 +183,8 @@ label {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="divider">-</div>
-                                        <div class="col-md-3">
+                                        <div class="col-1 col-md-1 divider">-</div>
+                                        <div class="col-4 col-md-3">
                                             <div class="form-group">
                                                 <select class="form-control end_time" name="{{$day}}_end[]" onchange="changeHour(this,2)">
                                                     <option value=""></option>
@@ -152,8 +195,8 @@ label {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div>
-                                            <button type="button" class="btn btn-outline-danger btn-sm btn-close" onclick="removeHour(this);">X</button>
+                                        <div class="col-2 col-md-2">
+                                            <button type="button" class="btn btn-outline-danger btn-sm btn-close" onclick="removeHour(this);"><i class="material-icons">close</i></button>
                                         </div>
                                     </div>
                                     @endif
@@ -173,7 +216,7 @@ label {
           <script>
             function addHours(day,ele){
                 var html = '<div class="row">'
-                                        +'<div class="col-md-3">'
+                                        +'<div class="col-4 col-md-3">'
                                             +'<div class="form-group">'
                                                 +'<select class="form-control start_time"  name="'+day+'_start[]" onchange="changeHour(this,1)" required>'
                                                     +'<option value=""></option>'  
@@ -184,8 +227,8 @@ label {
                                                 +'</select>'
                                             +'</div>'
                                         +'</div>'
-                                        +'<div class="divider">-</div>'
-                                        +'<div class="col-md-3">'
+                                        +'<div class="col-1 col-md-1 divider">-</div>'
+                                        +'<div class="col-4 col-md-3">'
                                             +'<div class="form-group">'
                                                 +'<select class="form-control end_time" name="'+day+'_end[]" onchange="changeHour(this,2)" required>'
                                                     +'<option value=""></option>'
@@ -196,8 +239,8 @@ label {
                                                 +'</select>'
                                             +'</div>'
                                         +'</div>'
-                                        +'<div>'
-                                            +'<button type="button" class="btn btn-outline-danger btn-sm btn-close" onclick="removeHour(this);">X</button>'
+                                        +'<div class="col-2 col-md-2">'
+                                            +'<button type="button" class="btn btn-outline-danger btn-sm btn-close" onclick="removeHour(this);"><i class="material-icons">close</i></button>'
                                         +'</div>'
                                     +'</div>';
                 $(ele).parent().find('.hours').append(html);

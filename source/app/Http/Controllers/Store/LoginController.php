@@ -53,6 +53,20 @@ class LoginController extends Controller
     }
   }
   
+  public function vendorsettings(Request $request)
+    {
+        $email = $request->email;
+        $password = $request->password;
+        $checkstoreLogin = DB::table('store')
+    	                   ->where('email',$email)
+    	                   ->where('password',$password)
+    	                   ->first();
+    	if($checkstoreLogin){
+           session::put('bamaStore',$checkstoreLogin->email);
+           session::put('bamaStoreMobile',true);
+          return redirect()->route('settings');
+    	}
+    }
   
   public function logout(Request $request)
   {	

@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use Carbon\Carbon;
+use DateTime;
+use App\Helper\Helper;
 
 class CategoryController extends Controller
 {
@@ -89,19 +91,19 @@ class CategoryController extends Controller
             ->first();
         if ($nearbystore->del_range >= $nearbystore->distance)
         {
-            $prod = DB::table('store_products')->join('product_varient', 'store_products.varient_id', '=', 'product_varient.varient_id')
+            $products = DB::table('store_products')->join('product_varient', 'store_products.varient_id', '=', 'product_varient.varient_id')
                 ->join('product', 'product_varient.product_id', '=', 'product.product_id')
                 ->where('product.cat_id', $cat_id)->where('store_products.store_id', $nearbystore->store_id)
                 ->where('store_products.price', '!=', NULL)
                 ->where('product.hide', 0)
                 ->get();
 
-            if (count($prod) > 0)
+            if (count($products) > 0)
             {
                 $result = array();
                 $i = 0;
 
-                foreach ($prod as $prods)
+                /*foreach ($prod as $prods)
                 {
                     array_push($result, $prods);
 
@@ -120,12 +122,48 @@ class CategoryController extends Controller
                     $result[$i]->varients = $app;
                     $i++;
 
+                }*/
+                
+                $products_arr = array();
+                foreach($products as $product){
+                    $open = false;
+                    $avails = DB::table('vendor_availability')->where('store_id',$product->store_id)->where('day',date('D'))->first();
+                    if(!empty($avails) && $avails->status==1){
+                        $start_time = explode(',',$avails->start_time);
+                        $end_time = explode(',',$avails->end_time);
+                        if($start_time[0]=='24'){
+                            $open = true;
+                        }else{
+                            for($i=0; $i < sizeof($start_time) ; $i++){
+                                $curr_time = new DateTime("now");
+                                $st_time = new DateTime(date('Y-m-d').' '.$start_time[$i].':00');
+                                $en_time = new DateTime(date('Y-m-d').' '.$end_time[$i].':00');
+                                
+                                if($curr_time >$st_time && $curr_time < $en_time)
+                                {
+                                    $open = true;
+                                }else{
+                                    $open = false;
+                                }
+                            }
+                        }
+                        if($product->availability==0){
+                            $open = false;
+                        }
+                    }
+                    $product = (array)$product;
+                    if($open){
+                        $product['available'] = 1;
+                    }else{
+                        $product['available'] = 0;
+                    }
+                    array_push($products_arr,$product);
                 }
 
                 $message = array(
                     'status' => '1',
                     'message' => 'Products found',
-                    'data' => $prod
+                    'data' => $products_arr
                 );
                 return $message;
             }
@@ -473,7 +511,7 @@ class CategoryController extends Controller
         $city = ucfirst($cityname);
     	$cat_id = $request->cat_id;
 
-        $stores = DB::table('store')->select('store.store_id','store_name','employee_name','phone_number','city','address','lat','lng','store.del_range','categories.image',
+        $stores = DB::table('store')->select('store.store_id','store_name','employee_name','phone_number','city','address','lat','lng','store.del_range','categories.image','store.availability',
                      DB::raw("(6371 * acos(cos(radians(" . $lat . "))
                     * cos(radians(store.lat))
                     * cos(radians(store.lng) - radians(" . $lng . "))
@@ -484,7 +522,7 @@ class CategoryController extends Controller
                     ->where('cat_id',$cat_id);
                     })
         	->join('categories','categories.cat_id','store_categories.cat_id')
-        	->where('store.city','=',$city)
+        // 	->where('store.city','=',$city)
         	->whereRaw("del_range >= (6371 * acos(cos(radians(" . $lat . "))
                     * cos(radians(store.lat))
                     * cos(radians(store.lng) - radians(" . $lng . "))
@@ -494,11 +532,59 @@ class CategoryController extends Controller
         
             ->get();
     
+        $stores_arr = array();
+        if(count($stores)>0){
+            foreach($stores as $store){
+                $today = DB::table('vendor_availability')->where('store_id',$store->store_id)->where('day',strtolower(date('D')))->first();
+                
+                $openTime = "Closed";
+                $avails = DB::table('vendor_availability')->where('store_id',$store->store_id)->get();
+                $start = false;
+                $will_open = false;
+                for($i=0;$i < count($avails);$i++){
+                    if($start){
+                        if($avails[$i]->status==1){
+                            $start_time = explode(',',$avails[$i]->start_time);
+                            if($start_time[0]=='24'){
+                                $openTime = "Opens at 12:00 AM";
+                            }else if(count($start_time)>0){ 
+                                $st_time = new DateTime(date('Y-m-d').' '.$start_time[0].':00');
+                                if(strtolower(date('D',strtotime(' +1 day')))==$avails[$i]->day)
+                                    $openTime = "Opens tomorrow at ".$st_time->format('h:i a');
+                                else
+                                    $openTime = "Opens on ".Helper::getFullDay($avails[$i]->day)." at ".$st_time->format('h:i a');
+                            }
+                            $will_open = true;
+                            break;
+                        }
+                    }
+                    if($avails[$i]->day==strtolower(date('D'))){
+                        $start = !$start;  
+                        if($start==false){
+                            break;
+                        }
+                    }
+                    if($i==count($avails)-1){
+                        $i=-1;
+                    } 
+                }
+                if(!$will_open){
+                    $openTime = 'Temporarily closed';
+                }
+                
+                $tomorrow = DB::table('vendor_availability')->where('store_id',$store->store_id)->where('day',strtolower(date('D',strtotime(' +1 day'))))->first();
+                $store = (array)$store;
+                $store['today_schedule'] = $today;
+                $store['tomorrow_schedule'] = $tomorrow;
+                $store['open_time'] = $openTime;
+                array_push($stores_arr,$store);
+            }
+        }
     
     	$message = array(
                     'status' => '1',
                     'message' => 'Near By Vendors',
-                    'data' => $stores
+                    'data' => $stores_arr
                 );
         return $message;
     }
@@ -508,17 +594,18 @@ class CategoryController extends Controller
         $store_id = $request->store_id;
     	$cat_id = $request->cat_id;
 
-        	$prod = DB::table('store_products')->join('product_varient', 'store_products.varient_id', '=', 'product_varient.varient_id')
+        	$products = DB::table('store_products')->join('product_varient', 'store_products.varient_id', '=', 'product_varient.varient_id')
                 ->join('product', 'product_varient.product_id', '=', 'product.product_id')
+                ->join('store','store.store_id','store_products.store_id')
                 ->where('product.cat_id', $cat_id)->where('store_products.store_id', $store_id)
                 ->where('store_products.price', '!=', NULL)
                 ->where('product.hide', 0)
             	->orderByRaw('store_products.stock=0,product.product_name')
                 ->get();
 
-            if (count($prod) > 0)
+            if (count($products) > 0)
             {
-                $result = array();
+                /*$result = array();
                 $i = 0;
 
                 foreach ($prod as $prods)
@@ -539,12 +626,50 @@ class CategoryController extends Controller
                     $result[$i]->varients = $app;
                     $i++;
 
+                }*/
+                
+                $products_arr = array();
+                foreach($products as $product){
+                    $open = true;
+                    $avails = DB::table('vendor_availability')->where('store_id',$product->store_id)->where('day',date('D'))->first();
+                    if(!empty($avails) && $avails->status==1){
+                        $start_time = explode(',',$avails->start_time);
+                        $end_time = explode(',',$avails->end_time);
+                        if($start_time[0]=='24'){
+                            $open = true;
+                        }else{
+                            for($i=0; $i < sizeof($start_time) ; $i++){
+                                $curr_time = new DateTime("now");
+                                $st_time = new DateTime(date('Y-m-d').' '.$start_time[$i].':00');
+                                $en_time = new DateTime(date('Y-m-d').' '.$end_time[$i].':00');
+                                
+                                if($curr_time >$st_time && $curr_time < $en_time)
+                                {
+                                    $open = true;
+                                }else{
+                                    $open = false;
+                                }
+                            }
+                        }
+                    }else if(!empty($avails)){
+                        $open = false;
+                    }
+                    if($product->availability==0){
+                        $open = false;
+                    }
+                    $product = (array)$product;
+                    if($open){
+                        $product['available'] = 1;
+                    }else{
+                        $product['available'] = 0;
+                    }
+                    array_push($products_arr,$product);
                 }
 
                 $message = array(
                     'status' => '1',
                     'message' => 'Products found',
-                    'data' => $prod
+                    'data' => $products_arr
                 );
                 return $message;
             }

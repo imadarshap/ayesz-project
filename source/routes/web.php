@@ -17,6 +17,7 @@ Route::get('/clear-cache', function() {
     return "Cache is cleared";
 });
 
+
 Route::group(['prefix'=>'web', ['middleware' => ['XSS']], 'namespace'=>'Web'], function(){
    // for login
 	Route::get('/', 'UserloginController@userlogin')->name('userLogin');
@@ -306,7 +307,6 @@ Route::group(['prefix'=>'api','namespace'=>'Api'],function(){
 });
 
 
-
 Route::group(['prefix'=>'store', ['middleware' => ['XSS']], 'namespace'=>'Store'], function(){
 
 	// for login
@@ -314,6 +314,7 @@ Route::group(['prefix'=>'store', ['middleware' => ['XSS']], 'namespace'=>'Store'
 	Route::get('store_register/', 'StoreregController@register_store')->name('store_register');
 	Route::post('store_registered/', 'StoreregController@store_registered')->name('store_registered');
 	Route::post('loginCheck','LoginController@storeLoginCheck')->name('storeLoginCheck');
+	Route::post('vendor_settings', 'LoginController@vendorsettings')->name('vendor_settings');
 
 	Route::group(['middleware'=>'bamaStore'], function(){
 	Route::get('home', 'HomeController@storeHome')->name('storeHome');
