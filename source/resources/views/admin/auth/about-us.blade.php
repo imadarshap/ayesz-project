@@ -386,7 +386,7 @@
 					<div class="container">
 						<div class="row">
 							
-							<div class="col-lg-4 col-md-4">
+							<div class="col-lg-6 col-md-6">
 								<div class="footer_widget">
 									<h4 class="extream">Contact us</h4>
 									<p>Let's here all about it! <a href="#" class="theme-cl">Get it touch</a></p>
@@ -409,10 +409,12 @@
 								<div class="footer_widget">
 									<h4 class="widget_title">Categories</h4>
 									<ul class="footer-menu">
-										<li><a href="#">Organic</a></li>
-										<li><a href="#">Grocery</a></li>
-										<li><a href="#">Education</a></li>
-										<li><a href="#">Furniture</a></li>
+										<li><a href="#">Groceries</a></li>
+										<li><a href="#">Fruits & Vegetables</a></li>
+										<li><a href="#">Food</a></li>
+										<li><a href="#">Meat</a></li>
+										<li><a href="#">Beverages</a></li>
+										<li><a href="#">Others</a></li>
 									</ul>
 								</div>
 							</div>
@@ -431,24 +433,13 @@
 							
 							<div class="col-lg-2 col-md-2">
 								<div class="footer_widget">
-									<h4 class="widget_title">Latest News</h4>
-									<ul class="footer-menu">
-										<li><a href="#">Offers & Deals</a></li>
-										<li><a href="#">My Account</a></li>
-										<li><a href="#">My Products</a></li>
-										<li><a href="#">Favorites</a></li>
-									</ul>
-								</div>
-							</div>
-							
-							<div class="col-lg-2 col-md-2">
-								<div class="footer_widget">
-									<h4 class="widget_title">Customer Support</h4>
+									<h4 class="widget_title">Policies</h4>
 									<ul class="footer-menu">
 										<li><a href="http://ayesz.in/terms-conditions">Terms & Conditions</a></li>
 										<li><a href="http://ayesz.in/privacy-policy">Privacy Policy</a></li>
-										<li><a href="#">Blog</a></li>
-										<li><a href="#">FAQs</a></li>
+										<li><a href="http://ayesz.in/shipping-policy">Shipping Policy</a></li>
+										<li><a href="http://ayesz.in/refund-policy">Refund Policy</a></li>
+										<li><a href="http://ayesz.in/return-policy">Return Policy</a></li>
 									</ul>
 								</div>
 							</div>

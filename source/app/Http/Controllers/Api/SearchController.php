@@ -65,6 +65,7 @@ class SearchController extends Controller
                     if($curr_time >$st_time && $curr_time < $en_time)
                     {
                         $open = true;
+                        break;
                     }else{
                         $open = false;
                     }

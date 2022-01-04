@@ -19,9 +19,9 @@ class CouponController extends Controller
     	  $logo = DB::table('tbl_web_setting')
                 ->where('set_id', '1')
                 ->first();
-        $coupon= DB::table('coupon')
+        $coupons = DB::table('coupon')
                 ->get();
-        return view('admin.coupon.couponlist',compact("title","coupon",'admin','logo'));
+        return view('admin.coupon.couponlist',compact("title","coupons",'admin','logo'));
     }
     
      public function coupon(Request $request)
@@ -49,10 +49,12 @@ class CouponController extends Controller
         $valid_to = $request->valid_to;
         $valid_from = $request->valid_from;
         $cart_value = $request->cart_value;
+        $max_cart_value = $request->max_cart_value;
         $coupon_type = $request->coupon_type;
-        $coupon_discount =$request->coupon_discount;
         $restriction = $request->restriction;
+        $coupon_discount =$request->coupon_discount;
         $discount = str_replace("%",'', $coupon_discount);
+        $max_discount = $request->max_discount;
 
         
       $this->validate(
@@ -91,7 +93,9 @@ class CouponController extends Controller
                        'type'=>$coupon_type,
                        'uses_restriction'=>$restriction,
                        'amount'=>$discount,
-                       'cart_value'=>$cart_value]);
+                       'max_cart_value'=>$max_cart_value,
+                       'cart_value'=>$cart_value,
+                       'max_discount'=>$max_discount]);
      
      return redirect()->back()->withSuccess('Added Successfully');
 
@@ -125,8 +129,12 @@ class CouponController extends Controller
         $coupon_desc = $request->coupon_desc;
         $valid_to = $request->valid_to;
         $valid_from = $request->valid_from;
+        $max_cart_value = $request->max_cart_value;
         $cart_value = $request->cart_value;
         $restriction = $request->restriction;
+        $coupon_discount =$request->coupon_discount;
+        $discount = str_replace("%",'', $coupon_discount);
+        $max_discount = $request->max_discount;
         
       $this->validate(
             $request,
@@ -162,11 +170,12 @@ class CouponController extends Controller
                        'type'=>$coupon_type,
                        'end_date'=>$valid_from,
                        'cart_value'=>$cart_value,
-                       'uses_restriction'=>$restriction]);
+                       'amount'=>$discount,
+                       'max_cart_value'=>$max_cart_value,
+                       'uses_restriction'=>$restriction,
+                       'max_discount'=>$max_discount]);
 
         if($update){
-
-             
 
             return redirect()->back()->withSuccess(' Updated Successfully');
         }

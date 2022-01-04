@@ -79,9 +79,7 @@
                 <a href="{{route('EditCategory',$cat->cat_id)}}" rel="tooltip" class="btn btn-success">
                     <i class="material-icons">edit</i>
                 </a>
-               <a href="{{route('DeleteCategory',$cat->cat_id)}}" onclick="return confirm('Do you want to Delete {{$cat->title}} Category');" rel="tooltip" class="btn btn-danger">
-                    <i class="material-icons">close</i>
-                </a>
+
             </td>
         </tr>
           @php $i++; @endphp

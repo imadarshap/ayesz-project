@@ -547,7 +547,7 @@ class CategoryController extends Controller
                             $start_time = explode(',',$avails[$i]->start_time);
                             if($start_time[0]=='24'){
                                 $openTime = "Opens at 12:00 AM";
-                            }else if(count($start_time)>0){ 
+                            }else if(count($start_time)>0){
                                 $st_time = new DateTime(date('Y-m-d').' '.$start_time[0].':00');
                                 if(strtolower(date('D',strtotime(' +1 day')))==$avails[$i]->day)
                                     $openTime = "Opens tomorrow at ".$st_time->format('h:i a');
@@ -646,6 +646,7 @@ class CategoryController extends Controller
                                 if($curr_time >$st_time && $curr_time < $en_time)
                                 {
                                     $open = true;
+                                    break;
                                 }else{
                                     $open = false;
                                 }

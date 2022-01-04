@@ -36,9 +36,3 @@
 	Header set X-Content-Type-Options nosniff
 </IfModule>
 
-RewriteCond %{HTTPS} off
-RewriteCond %{HTTP:X-Forwarded-SSL} !on
-RewriteCond %{HTTP_HOST} ^ayesz\.in$ [OR]
-RewriteCond %{HTTP_HOST} ^www\.ayesz\.in$
-RewriteRule ^/?$ "https\:\/\/ayesz\.in\/" [R=301,L]
-

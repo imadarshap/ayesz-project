@@ -19,8 +19,10 @@ class DeliveryController extends Controller
     	  $logo = DB::table('tbl_web_setting')
                 ->where('set_id', '1')
                 ->first();
-           $d_boy = DB::table('delivery_boy')
-                    ->get();
+         //  $d_boy = DB::table('delivery_boy')
+           $d_boy = DB::table('delivery_boy')->orderby('delivery_boy.status','DESC')->get();
+                //   ->get();
+           
         
     	return view('admin.d_boy.list', compact('title',"admin", "logo","d_boy"));
     }

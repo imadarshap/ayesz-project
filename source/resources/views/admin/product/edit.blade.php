@@ -36,7 +36,26 @@
                       {{csrf_field()}}
                 </div>
                 <div class="card-body">
+                     
                      <div class="row">
+                         
+                    
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Category</label>
+                          <select name="cat_id" class="form-control" required>
+                              <option value="" disabled selected>Select Category</option>
+                              @foreach($category as $categorys)
+                              
+        		          	<option <?php if($product -> cat_id == $categorys->cat_id){ echo "selected"; } else { echo " "; } ?>  value="{{$categorys->cat_id}}">{{$categorys->title}}</option>
+        		              @endforeach
+                              
+                          </select>
+                        </div>
+                      </div>
+                      </div>
+                      
+                      <div class="row">
                       <div class="col-md-6">
                         <div class="form-group">
                           <label class="bmd-label-floating">Product_name</label>

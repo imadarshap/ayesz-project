@@ -10,6 +10,13 @@
       'PDF' => 'Barryvdh\\DomPDF\\Facade',
     ),
   ),
+  'cyber-duck/laravel-excel' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Cyberduck\\LaravelExcel\\ExcelServiceProvider',
+    ),
+  ),
   'facade/ignition' => 
   array (
     'providers' => 

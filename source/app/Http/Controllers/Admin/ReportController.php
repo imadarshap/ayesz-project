@@ -33,7 +33,14 @@ class ReportController extends Controller
             })->leftJoin('delivery_boy','delivery_boy.dboy_id','orders.dboy_id')
         	->leftJoin('store_orders','store_orders.order_cart_id','=','orders.cart_id')
         	->where('orders.payment_method','!=',NULL)
-        		->select('*',DB::raw('((orders.price_without_delivery/100)*store.admin_share) as commission'));
+        	//  ->where('orders.order_status','Completed')
+        	  ->where('orders.order_status','!=','Rejected_By_Vendor')
+        	  ->where('orders.order_status','!=','Cancelled')
+        		//->select('*',DB::raw('((orders.price_without_delivery/100)*store.admin_share) as commission'));
+        	//	->select('*',DB::raw('((orders.price_without_delivery/100)*store.admin_share) as commission'));
+        		->select('*',DB::raw('((orders.price_without_delivery*(store.admin_share/(100 + store.admin_share)))) as commission'));
+        			
+        	//	->select(DB::raw('((store_orders.price_without_delivery *(store.admin_share/100 + store.admin_share))) as commission'))
     
     	$stores = array();
     	$dboys = array();
@@ -94,7 +101,8 @@ class ReportController extends Controller
                 })
 				->where('orders.order_status','Completed')
         		->groupby('store_orders.store_order_id')
-        		->select(DB::raw('((store_orders.price/100)*store.admin_share) as earning'))
+        	//	 ->select(DB::raw('((store_orders.price/100)*store.admin_share) as earning'))
+        		 ->select(DB::raw('((store_orders.price *(store.admin_share/100 + store.admin_share))) as earning'))
         		->get()->sum('earning');
     	$order_total = DB::table('orders')
 				->where('orders.order_status','Completed')
@@ -695,14 +703,24 @@ class ReportController extends Controller
         	->select('*',DB::raw('((orders.price_without_delivery/100)*store.admin_share) as commission'),DB::raw('SUM(qty) as qtysum'));
     		
     	$dboys = array();
+    	$stores = array();
     	
     	if(!empty($city)){
         	$orders = $orders->where('store.city',$city);
         	$orderStatus = $request->order_status;
+        	$dboys_selected = $request->delivery_agents;
+        	$stores_selected = $request->stores;
         	if(!empty($orderStatus)){
             	$orders = $orders->whereIn('orders.order_status',$orderStatus);
             }
+            
+            if(!empty($dboys_selected)){
+            	$orders = $orders->whereIn('orders.dboy_id',$dboys_selected);
+            }
         
+        if(!empty($stores_selected)){
+            	$orders = $orders->whereIn('orders.store_id',$stores_selected);
+            }
         	if(!empty($fromDate)&&!empty($toDate)){
             	$orders = $orders->where('orders.order_date','>=',$fromDate)
             			->where('orders.order_date','<=',$toDate);
@@ -711,6 +729,8 @@ class ReportController extends Controller
             }else if(empty($fromDate)&&!empty($toDate)){
             	$orders = $orders->where('orders.order_date','<=',$toDate);
             }
+            	
+        	$stores = DB::table('store')->where('city',$city)->get();
 	    	
         	$dboys = DB::table('delivery_boy')->where('boy_city',$city)->get();
         	$orders = $orders->groupby('cart_id')->orderby('orders.order_date','ASC')->get();
@@ -767,7 +787,7 @@ class ReportController extends Controller
         );
         
                 
-        return view('admin.report.report_by_order_status', compact('title','admin','logo','report','cities','request'));
+        return view('admin.report.report_by_order_status', compact('title','admin','logo','report','cities','request','dboys','stores'));
     }
 
 	public function reportByVendorOrderStatus(Request $request)
@@ -804,6 +824,7 @@ class ReportController extends Controller
     	if(!empty($city)){
         	$orders = $orders->where('store.city',$city);
         	$orderStatus = $request->order_status;
+        	
         	if(!empty($orderStatus)){
             	$orders = $orders->whereIn('orders.order_status',$orderStatus);
             }

@@ -14,8 +14,8 @@ class AppController extends Controller
           $app = DB::table('tbl_web_setting')
                       ->first();
                       
-        if($app)   { 
-            $message = array('status'=>'1', 'message'=>'App Name & Logo', 'data'=>$app);
+        if($app)   {
+            $message = array('status'=>'1', 'message'=>'App Name & Logo', 'data'=>$app,'time'=>date('Y-m-d H:i:s'));
             return $message;
         }
         else{

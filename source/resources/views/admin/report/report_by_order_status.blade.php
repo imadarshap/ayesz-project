@@ -144,32 +144,69 @@
                         </select>
                         </div>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-4">
                         <div class="form">
                           <label class="bmd-label-floating">Order Status</label>
                         <select name="order_status[]" id="order_status" class="form-input" multiple>
                         	<option value="">-None-</option>
 	                        <option value="Pending" @if(!empty($request->order_status)&&in_array("Pending",$request->order_status)) selected="" @endif>Pending</option>
                         <option value="Confirmed" @if(!empty($request->order_status)&&in_array("Confirmed",$request->order_status)) selected="" @endif>Confirmed</option>
+                        <option value="Accepted_By_Delivery_Agent" @if(!empty($request->order_status)&&in_array("Accepted_By_Delivery_Agent",$request->order_status)) selected="" @endif>Accepted By Delivery Agent</option>
+                        <option value="Rejected_By_Delivery_Agent" @if(!empty($request->order_status)&&in_array("Rejected_By_Delivery_Agent",$request->order_status)) selected="" @endif>Rejected By Delivery Agent</option>
+                        <option value="Rejected_By_Vendor" @if(!empty($request->order_status)&&in_array("Rejected_By_Vendor",$request->order_status)) selected="" @endif>Rejected By Vendor</option>
                         <option value="Out_For_Delivery" @if(!empty($request->order_status)&&in_array("Out_For_Delivery",$request->order_status)) selected="" @endif>Out For Delivery</option>
                         <option value="Completed" @if(!empty($request->order_status)&&in_array("Completed",$request->order_status)) selected="" @endif>Completed</option>
                         <option value="Cancelled" @if(!empty($request->order_status)&&in_array("Cancelled",$request->order_status)) selected="" @endif>Cancelled</option>
                         <option value="Rejected" @if(!empty($request->order_status)&&in_array("Rejected",$request->order_status)) selected="" @endif>Rejected</option>
+                        <!--<option value="Out_For_Delivery" @if(!empty($request->order_status)&&in_array("Out_For_Delivery",$request->order_status)) selected="" @endif>Out For Delivery</option>-->
                         <option value="Failed" @if(!empty($request->order_status)&&in_array("Failed",$request->order_status)) selected="" @endif>Failed</option>
 
                         </select>
                         </div>
                       </div>
+                      
+                      
+                      <div class="col-md-4">
+                        <div class="form">
+                          <label class="bmd-label-floating">Vendors</label>
+                        <select name="stores[]" id="stores" class="form-control" multiple>
+                        	<option value="">-None-</option>
+                        	@if(!empty($stores))
+                        	@foreach($stores as $store)
+                        		<option value="{{$store->store_id}}" @if(!empty($request->stores)&&in_array($store->store_id,$request->stores)) selected="" @endif>{{$store->store_name}}</option>
+                        	@endforeach
+                        	@endif
+                        </select>
+                        </div>
+                      </div>
+                      
+                      
+                      <div class="col-md-4">
+                        <div class="form">
+                          <label class="bmd-label-floating">Delivery Agent</label>
+                        <select name="delivery_agents[]" id="delivery_boy" class="form-control" multiple>
+                        	<option value="">-None-</option>
+                        	@if(!empty($dboys))
+                        	@foreach($dboys as $dboy)
+                        		<option value="{{$dboy->dboy_id}}" @if(!empty($request->delivery_agents) && in_array($dboy->dboy_id,$request->delivery_agents)) selected="" @endif>{{$dboy->boy_name}}</option>
+                        	@endforeach
+                        	@endif
+                        </select>
+                        </div>
+                      </div>
+                      
+                      
+                      
                       <div class="col-md-3">
                         <div class="form">
                           <label class="bmd-label-floating">From Date</label>
-                        <input type="text" name="fromdate" value="{{$request->fromdate}}" id="fromdate" class="form-input datepicker" placeholder="Select a date"/>
+                        <input autocomplete="off" type="text" name="fromdate" value="{{$request->fromdate}}" id="fromdate" class="form-input datepicker" placeholder="Select a date"/>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="form">
                           <label class="bmd-label-floating">To Date</label>
-                        <input type="text" name="todate" id="todate" value="{{$request->todate}}" class="form-input datepicker" placeholder="Select a date"/>
+                        <input autocomplete="off" type="text" name="todate" id="todate" value="{{$request->todate}}" class="form-input datepicker" placeholder="Select a date"/>
                         </div>
                       </div>
     				</div>
@@ -197,7 +234,12 @@
         	<th>City</th>
             <th>Order Id</th>
         	<th>Order Date</th>
+        	<th>Vendor</th>
+        	<th>User</th>
+        	<th>Delivery Boy</th>
         	<th>Status</th>
+        	<th>PaymentMode</th>
+        	<th>Cart Products</th>
         </tr>
     </thead>
     <tbody>
@@ -214,7 +256,12 @@
         	<td>{{$order->city}}</td>
             <td>#{{$order->cart_id}}</td>
         	<td>{{$order->order_date}}</td>
+        	<td>#{{$order->store_id}} - {{$order->store_name}}</td>
+        	<td>#{{$order->user_id}} - {{$order->user_name}} - ({{$order->user_phone}})</td>
+        	<td>#{{$order->dboy_id}} - {{$order->boy_name}} - ({{$order->boy_phone}})</td>
         	<td>{{$order->order_status}}</td>
+        	<td>{{$order->payment_method}}</td>
+        	<td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1{{$order->cart_id}}">Details</button></td>
         </tr>
           @php $i++; @endphp
                  @endforeach
@@ -230,7 +277,12 @@
             <th>Order Id</th>
         	<th>City</th>
         	<th>Order Date</th>
+        	<th>Vendor</th>
+        	<th>User</th>
+        	<th>Delivery Boy</th>
         	<th>Status</th>
+        	<th>PaymentMode</th>
+        	<th>Cart Products</th>
         </tr>
     </tfoot>
 </table>
@@ -242,6 +294,8 @@
 </div>
 <div>
     </div>
+    
+ 
      <script>
      	function setMultipleSelect(){
         	$('select[multiple]').multiselect({
@@ -301,7 +355,31 @@
         		]
 		    } );
         	@endif
-        	setMultipleSelect();
+    //     	setMultipleSelect();
+    //     	$('#city').change(function(){
+    //         	 $('select[multiple]').multiselect('disable',true);
+    //              $('.loader').show();
+    //         	$.ajax({
+	  	// 			type: "GET",
+				// 	url: '{{route('get_stores_dboy_by_city')}}'+'?city='+$(this).val(),
+    //             	dataType:'json',
+	  	// 			success: function(data){
+    //                 console.log(data);
+    //                 	var stores = '';
+    //                 	$.each(data.stores,function(key,value){
+    //                     	stores += '<option value="'+value.store_id+'">'+value.store_name+'</option>';
+    //                     });
+    //                 	$('#stores').html(stores);
+                    	
+    //                 	$('select[multiple]').multiselect('reload');
+    //                 	$('select[multiple]').multiselect('disable',false);
+    //                 	$('.loader').hide();
+    //                 	// setMultipleSelect();
+    //             	}
+				// });
+    //         });
+            
+            setMultipleSelect();
         	$('#city').change(function(){
             	 $('select[multiple]').multiselect('disable',true);
                  $('.loader').show();
@@ -316,7 +394,11 @@
                         	stores += '<option value="'+value.store_id+'">'+value.store_name+'</option>';
                         });
                     	$('#stores').html(stores);
-                    	
+                    	var dboys = '';
+                    	$.each(data.dboys,function(key,value){
+                        	dboys += '<option value="'+value.dboy_id+'">'+value.boy_name+'</option>';
+                        });
+                    	$('#delivery_boy').html(dboys);
                     	$('select[multiple]').multiselect('reload');
                     	$('select[multiple]').multiselect('disable',false);
                     	$('.loader').hide();
@@ -345,5 +427,12 @@
 				// });
 		});
     </script>
+    
+    
+    
+    
+    
+    
+    
     @endsection
 </div>

@@ -56,6 +56,8 @@ Route::group(['prefix'=>'', ['middleware' => ['XSS']], 'namespace'=>'Api'], func
      Route::post('checkout', 'OrderController@checkout');
      Route::post('completed_orders', 'OrderController@completed_orders');
      Route::post('recentselling', 'OrderController@recentselling');
+
+     Route::post('get_order_payment_status', 'OrderController@getOrderPaymentStatus');
     
     //coupon//
     Route::post('apply_coupon', 'CouponController@apply_coupon');
@@ -90,6 +92,7 @@ Route::group(['prefix'=>'', ['middleware' => ['XSS']], 'namespace'=>'Api'], func
      Route::post('recharge_wallet', 'WalletController@add_credit');
      Route::post('totalbill', 'WalletController@totalbill');
      Route::post('show_recharge_history', 'WalletController@show_recharge_history');
+     Route::post('create_wallet_order', 'WalletController@createWalletOrder');
      
      
      //notification by///
@@ -138,7 +141,7 @@ Route::group(['prefix'=>'', ['middleware' => ['XSS']], 'namespace'=>'Api'], func
          Route::get('countrycode', 'FirebaseController@countrycode');
          Route::get('firebase', 'FirebaseController@firebase');
          Route::get('app_notice', 'FirebaseController@app_notice');
-         
+        
          Route::post('verify_via_firebase', 'UserController@verifyotpfirebase');
         //Added By PIS
         Route::post('stores_by_category', 'CategoryController@stores_by_category');

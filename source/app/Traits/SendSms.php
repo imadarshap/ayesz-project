@@ -12,7 +12,7 @@ trait SendSms {
     public function ordersuccessfull($cart_id,$prod_name,$price2,$delivery_date,$time_slot,$user_phone) {
         $countrycode =DB::table('country_code')
                      ->first();
-        $getInvitationMsg = "Order Successfully Placed: Your order id #".$cart_id." contains of " .$prod_name." of price rs ".$price2. " is placed Successfully.You can expect your item(s) will be delivered on ".$delivery_date;
+        $getInvitationMsg = "Order Successfully Placed: Your order id #".$cart_id." contains of " .$prod_name." of price rs ".$price2. " is placed Successfully.You can expect your item(s) will be delivered on ".$delivery_date." Team AyesZ";
         $smsby =  DB::table('smsby')
                ->first();
     if($smsby->status==1){       
@@ -34,7 +34,9 @@ trait SendSms {
                             'mobiles' => $countrycode->country_code.$user_phone,
                             'message' => $message1,
                             'sender' => $senderId,
-                            'route' => $route
+                            'route' => $route,
+                            'DLT_TE_ID' => '1107162046309324553',
+                            'dev_mode' => '1',
                         );
         
                         $url="https://control.msg91.com/api/sendhttp.php";
@@ -89,7 +91,7 @@ trait SendSms {
 	public function ordercancel($cart_id,$prod_name,$price2,$phone) {
         $countrycode =DB::table('country_code')
                      ->first();
-        $getInvitationMsg = "Order Cancelled By Customer: Your order id #".$cart_id." contains of " .$prod_name." of price rs ".$price2. " is cancelled by customer.";
+        $getInvitationMsg = "Order Cancelled By Customer: Your order id #".$cart_id." contains of " .$prod_name." of price rs ".$price2. " is cancelled by customer. Team AyesZ";
         $smsby =  DB::table('smsby')
                ->first();
     if($smsby->status==1){       
@@ -111,7 +113,9 @@ trait SendSms {
                             'mobiles' => $countrycode->country_code.$phone,
                             'message' => $message1,
                             'sender' => $senderId,
-                            'route' => $route
+                            'route' => $route,
+                            'DLT_TE_ID' => '1107162046318391873',
+                            'dev_mode' => '1',
                         );
         
                         $url="https://control.msg91.com/api/sendhttp.php";
@@ -165,7 +169,7 @@ trait SendSms {
     public function orderreject($cart_id,$prod_name,$price2,$phone,$by_name) {
         $countrycode =DB::table('country_code')
                      ->first();
-        $getInvitationMsg = "Order Rejected By ".$by_name.": Your order id #".$cart_id." contains of " .$prod_name." of price rs ".$price2. " is rejected by ".$by_name;
+        $getInvitationMsg = "Order Rejected By ".$by_name.": Your order id #".$cart_id." contains of " .$prod_name." of price rs ".$price2. " is rejected by ".$by_name.". Team AyesZ";
         $smsby =  DB::table('smsby')
                ->first();
     if($smsby->status==1){       
@@ -187,7 +191,9 @@ trait SendSms {
                             'mobiles' => $countrycode->country_code.$phone,
                             'message' => $message1,
                             'sender' => $senderId,
-                            'route' => $route
+                            'route' => $route,
+                            'DLT_TE_ID' => '1107162046325750180',
+                            'dev_mode' => '1',
                         );
         
                         $url="https://control.msg91.com/api/sendhttp.php";
@@ -241,7 +247,7 @@ trait SendSms {
      public function orderconfirmedsms($cart_id,$user_phone,$orr) {
         $countrycode =DB::table('country_code')
                      ->first();     
-        $getInvitationMsg = "Your Order is confirmed: Your order id #".$cart_id." is confirmed by the store.You can expect your item(s) will be delivered on ".$orr->delivery_date;
+        $getInvitationMsg = "Your Order is confirmed: Your order id #".$cart_id." is confirmed by the store.You can expect your item(s) will be delivered on ".$orr->delivery_date.". Team AyesZ";
         $smsby =  DB::table('smsby')
                ->first();
     if($smsby->status==1){       
@@ -263,7 +269,9 @@ trait SendSms {
                             'mobiles' => $countrycode->country_code.$user_phone,
                             'message' => $message1,
                             'sender' => $senderId,
-                            'route' => $route
+                            'route' => $route,
+                            'DLT_TE_ID' => '1107161437118657053',
+                            'dev_mode' => '1',
                         );
         
                         $url="https://control.msg91.com/api/sendhttp.php";
@@ -318,10 +326,10 @@ trait SendSms {
          $countrycode =DB::table('country_code')
                      ->first();
          if($ord->payment_method=="COD" || $ord->payment_method=="cod"){
-                        $getInvitationMsg = "Out For Delivery: Your order id #".$cart_id." contains of " .$prod_name." of price ".$currency->currency_sign." ".$price2. " is Out For Delivery.Get ready with ".$currency->currency_sign." ". $ord->rem_price. " cash.";
+                        $getInvitationMsg = "Out For Delivery: Your order id #".$cart_id." contains of " .$prod_name." of price ".$currency->currency_sign." ".$price2. " is Out For Delivery.Get ready with ".$currency->currency_sign." ". $ord->rem_price. " cash. Team AyesZ";
             }
             else{
-                $getInvitationMsg = "Out For Delivery: Your order id #".$cart_id." contains of " .$prod_name." of price " .$currency->currency_sign." ".$price2. " is Out For Delivery.Get ready."; 
+                $getInvitationMsg = "Out For Delivery: Your order id #".$cart_id." contains of " .$prod_name." of price " .$currency->currency_sign." ".$price2. " is Out For Delivery.Get ready. Team AyesZ"; 
             }
         $smsby =  DB::table('smsby')
                ->first();
@@ -344,7 +352,9 @@ trait SendSms {
                             'mobiles' => $countrycode->country_code.$user_phone,
                             'message' => $message1,
                             'sender' => $senderId,
-                            'route' => $route
+                            'route' => $route,
+                            'DLT_TE_ID' => '1107162046339186423',
+                            'dev_mode' => '1',
                         );
         
                         $url="https://control.msg91.com/api/sendhttp.php";
@@ -398,7 +408,7 @@ trait SendSms {
      public function delcomsms($cart_id, $prod_name, $price2,$currency,$user_phone) {
          $countrycode =DB::table('country_code')
                      ->first();
-         $getInvitationMsg = "Delivery Completed: Your order id #".$cart_id." contains of " .$prod_name." of price " .$currency->currency_sign." ".$price2. " is Delivered Successfully.";
+         $getInvitationMsg = "Delivery Completed: Your order id #".$cart_id." contains of " .$prod_name." of price " .$currency->currency_sign." ".$price2. " is Delivered Successfully. Team AyesZ";
         $smsby =  DB::table('smsby')
                ->first();
                
@@ -421,7 +431,9 @@ trait SendSms {
                             'mobiles' => $countrycode->country_code.$user_phone,
                             'message' => $message1,
                             'sender' => $senderId,
-                            'route' => $route
+                            'route' => $route,
+                            'DLT_TE_ID' => '1107162046348918996',
+                            'dev_mode' => '1',
                         );
         
                         $url="https://control.msg91.com/api/sendhttp.php";
@@ -475,7 +487,7 @@ trait SendSms {
      public function otpmsg($otpval,$user_phone) {
         $countrycode =DB::table('country_code')
                      ->first(); 
-        $getInvitationMsg = "Your OTP is: ".$otpval.".\nNote: Please DO NOT SHARE this OTP with anyone."; 
+        $getInvitationMsg = "Your OTP is: ".$otpval.".\nNote: Please DO NOT SHARE this OTP with anyone. Team AyesZ"; 
         $smsby =  DB::table('smsby')
                ->first();
         if($smsby->status==1){         
@@ -497,7 +509,9 @@ trait SendSms {
                             'mobiles' => $countrycode->country_code.$user_phone,
                             'message' => $message1,
                             'sender' => $senderId,
-                            'route' => $route
+                            'route' => $route,
+                            'DLT_TE_ID' => '1107161437084366294',
+                            'dev_mode' => '1',
                         );
         
                         $url="https://control.msg91.com/api/sendhttp.php";
@@ -554,7 +568,7 @@ trait SendSms {
  public function sendpayoutmsg($amt,$store_phone) {
          $countrycode =DB::table('country_code')
                      ->first();
-         $getInvitationMsg = 'Amount of '.$amt.' marked paid successfully against your request.';
+         $getInvitationMsg = 'Amount of '.$amt.' marked paid successfully against your request. Team AyesZ';
         $smsby =  DB::table('smsby')
                ->first();
     if($smsby->status==1){       
@@ -632,7 +646,7 @@ trait SendSms {
  public function sendrejectmsg($cause,$user,$cart_id) {
         $countrycode =DB::table('country_code')
                      ->first();
-         $getInvitationMsg = 'Hello '.$user->user_name.', We are cancelling your order ('.$cart_id.') due to following reason:  '.$cause;
+         $getInvitationMsg = 'Hello '.$user->user_name.', We are cancelling your order ('.$cart_id.') due to following reason:  '.$cause.". Team AyesZ";
         $smsby =  DB::table('smsby')
                ->first();
     if($smsby->status==1){       
@@ -654,7 +668,9 @@ trait SendSms {
                             'mobiles' => $countrycode->country_code.$user->user_phone,
                             'message' => $message1,
                             'sender' => $senderId,
-                            'route' => $route
+                            'route' => $route,
+                            'DLT_TE_ID' => '1107162046354389428',
+                            'dev_mode' => '1',
                         );
         
                         $url="https://control.msg91.com/api/sendhttp.php";
@@ -709,7 +725,7 @@ trait SendSms {
      public function rechargesms($curr,$user_name, $add_to_wallet,$user_phone) {
          $countrycode =DB::table('country_code')
                      ->first();
-        $getInvitationMsg = "Hey ".$user_name." :your wallet recharge of ".$curr->currency_sign." ".$add_to_wallet. " is successful.";
+        $getInvitationMsg = "Hey ".$user_name." :your wallet recharge of ".$curr->currency_sign." ".$add_to_wallet. " is successful. Team AyesZ";
         $smsby =  DB::table('smsby')
                ->first();
     if($smsby->status==1){       
@@ -731,7 +747,9 @@ trait SendSms {
                             'mobiles' => $countrycode->country_code.$user_phone,
                             'message' => $message1,
                             'sender' => $senderId,
-                            'route' => $route
+                            'route' => $route,
+                            'DLT_TE_ID' => '1107161437107492220',
+                            'dev_mode' => '1',
                         );
         
                         $url="https://control.msg91.com/api/sendhttp.php";

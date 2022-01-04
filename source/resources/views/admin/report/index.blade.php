@@ -141,6 +141,9 @@
                         </select>
                         </div>
                       </div>
+                      
+                      
+
                       <div class="col-md-4">
                         <div class="form">
                           <label class="bmd-label-floating">Vendors</label>
@@ -213,10 +216,11 @@
         	<th>Order Amount</th>
         	<th>Delivery Charge</th>
         	<th>Discount</th>
+        	<th>Collection Amount</th>
         	<th>Total Amount</th>
         	<th>Commission %</th>
        		<th>Commission Amt</th>
-        	<th>Tax (18%)</th>
+        	<th>Tax </th>
         	<th>Convience Fee (0)</th>
         	<th>Payble Amount</th>
         	<th>Pay Mode</th>
@@ -228,26 +232,33 @@
           @php $i=1; @endphp
           @foreach($report['orders'] as $order)
     	  @php
-    		$tax = ($order->commission/100)*18;
+
+    	  
+    		// $tax = ($order->commission/100)*18; 
+    		$tax = 0; 
     		$convience_fee = (($order->price_without_delivery-$order->commission)/100)*1.84;
-    		$payble_amount = $order->price_without_delivery - $tax - $order->commission;
+    	//$payble_amount = $order->price_without_delivery - $tax - $order->commission;
+    		$payble_amount = $order->price_without_delivery  - $order->commission;
     		@endphp
         <tr>
             <td class="text-center">{{$i}}</td>
             <td>#{{$order->cart_id}}</td>
         	<td>{{$order->order_date}}</td>
         	<td>#{{$order->store_id}} - {{$order->store_name}}</td>
-        	<td>#{{$order->user_id}} - {{$order->user_name}}</td>
+        	<td>#{{$order->user_id}} - {{$order->user_name}} - {{$order->user_phone}}</td>
         	<td>#{{$order->dboy_id}} - {{$order->boy_name}}</td>
         	<td>{{$order->price_without_delivery}}</td>
         	<td>{{$order->delivery_charge}}</td>
         	<td>{{$order->coupon_discount}}</td>
+        	<td>{{$order->total_price - $order->coupon_discount }}</td>
         	<td>{{$order->total_price}}</td>
         	<td>{{$order->admin_share}}</td>
-        	<td>{{$order->commission}}</td>
-        	<td>{{round($tax,2)}}</td>
+        
+        		<td>{{round($order->commission,2)}}</td>
+        	<td>0.00</td>
         	<td>0.00</td>
         	<td>{{round($payble_amount,2)}}</td>
+      
         	<td>{{$order->payment_method}}</td>
         	<td>{{$order->order_status}}</td>
         </tr>
@@ -270,11 +281,12 @@
         	<th>Order Amount</th>
         	<th>Delivery Charge</th>
         	<th>Discount</th>
+        	<th>Collection Amount</th>
         	<th>Total Amount</th>
         	<th>Commission %</th>
        		<th>Commission Amt</th>
-        	<th>Tax (5%)</th>
-        	<th>Convience Fee (1.84%)</th>
+        	<th>Tax </th>
+        	<th>Convience Fee</th>
         	<th>Payble Amount</th>
         	<th>Pay Mode</th>
         	<th>Status</th>

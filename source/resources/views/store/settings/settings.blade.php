@@ -195,9 +195,6 @@ label {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-2 col-md-2">
-                                            <button type="button" class="btn btn-outline-danger btn-sm btn-close" onclick="removeHour(this);"><i class="material-icons">close</i></button>
-                                        </div>
                                     </div>
                                     @endif
                                 </div>

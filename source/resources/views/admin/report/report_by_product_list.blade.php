@@ -189,13 +189,13 @@
                       <div class="col-md-3">
                         <div class="form">
                           <label class="bmd-label-floating">From Date</label>
-                        <input type="text" name="fromdate" value="{{$request->fromdate}}" id="fromdate" class="form-input datepicker" placeholder="Select a date"/>
+                        <input autocomplete="off" type="text" name="fromdate" value="{{$request->fromdate}}" id="fromdate" class="form-input datepicker" placeholder="Select a date"/>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="form">
                           <label class="bmd-label-floating">To Date</label>
-                        <input type="text" name="todate" id="todate" value="{{$request->todate}}" class="form-input datepicker" placeholder="Select a date"/>
+                        <input autocomplete="off" type="text" name="todate" id="todate" value="{{$request->todate}}" class="form-input datepicker" placeholder="Select a date"/>
                         </div>
                       </div>
     				</div>
@@ -252,7 +252,9 @@
         	
         	<th>Category</th>
             <th>Product Name</th>
+             <th>Qty</th>
             <th>UOM</th>
+            <th>MRP</th>
         	<th>Price</th>
         	<th>Vendor</th>
         	
@@ -296,8 +298,10 @@
             <td><?php if(!empty($city)){  echo $city; } ?></td>
              <td><?php  if(!empty($categoryname->title)){  echo $categoryname->title; } ?></td>
             <td><?php if(!empty($productname->product_name)){  echo $productname->product_name; } ?></td>
+            <td><?php if(!empty($value->quantity)){  echo $value->quantity; } ?></td>
             <td><?php if(!empty($varientname->unit)){ echo $varientname->unit; } ?></td>
-            <!--<td><?php if(!empty($varientname->base_mrp)){  echo $varientname->base_mrp; } ?></td>-->
+       
+            <td><?php if(!empty($value->mrp)){  echo $value->mrp; } ?></td>
              <td><?php if(!empty($value->price)){  echo $value->price; } ?></td>
             <td>#<?php if(!empty($storename->store_name)){  echo $storename->store_id; } ?> <?php echo $storename->store_name; ?></td>
            
@@ -314,8 +318,10 @@
             <td><?php if(!empty($city)){  echo $city; } ?></td>
             <td>#<?php if(!empty($storename->store_name)){  echo $storename->store_id; } ?> <?php echo $storename->store_name; ?></td>
             <td><?php if(!empty($productname->product_name)){  echo $productname->product_name; } ?></td>
+                    <td><?php if(!empty($value->quantity)){  echo $value->quantity; } ?></td>
             <td><?php if(!empty($varientname->unit)){ echo $varientname->unit; } ?></td>
             <!--<td><?php if(!empty($varientname->base_mrp)){  echo $varientname->base_mrp; } ?></td>-->
+              <td><?php if(!empty($value->mrp)){  echo $value->mrp; } ?></td>
             <td><?php if(!empty($value->price)){  echo $value->price; } ?></td>
             <td><?php  if(!empty($categoryname->title)){  echo $categoryname->title; } ?></td>
             <td><?php if(!empty($value->created_at)){  echo $value->created_at; } ?></td>
@@ -336,7 +342,9 @@
         	
         	<th>Category</th>
             <th>Product Name</th>
+               <th>Qty</th>
             <th>UOM</th>
+            <th>MRP</th>
         	<th>Price</th>
         	<th>Vendor</th>
         	

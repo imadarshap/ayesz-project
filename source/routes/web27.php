@@ -12,10 +12,10 @@ use App\Http\Controllers\Web\WebHomeController;
 |
 */
 
-Route::get('/clear-cache', function() {
-    Artisan::call('config:cache');
-    return "Cache is cleared";
-});
+// Route::get('/clear-cache', function() {
+//     Artisan::call('config:cache');
+//     return "Cache is cleared";
+// });
 
 Route::group(['prefix'=>'web', ['middleware' => ['XSS']], 'namespace'=>'Web'], function(){
    // for login

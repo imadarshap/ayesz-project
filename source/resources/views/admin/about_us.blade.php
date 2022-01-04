@@ -42,11 +42,15 @@
                         <div class="form-group">
                             <label>About Us</label><br>
                           <textarea class="form-control" id="summary-ckeditor" name="description">@if($check){{$check->description}} @endif</textarea>
+
                           <script src="{{ url('assets/ckeditor/ckeditor.js') }}"></script>
                           <script>
                               CKEDITOR.replace( 'summary-ckeditor' );
                           </script>
                         </div>
+                        <div class="form-group">
+                        <label>Contact Number</label><br>
+                          <input type="tel" name="phone" value="@if($check){{$check->phone}} @endif" id="phone" class="form-control"/></div>
                       </div>
                     </div>
                     <button type="submit" class="btn btn-primary pull-center">Submit</button>

@@ -79,10 +79,7 @@
                     
                                     <a href="{{route('storedit', $cities->store_id)}}" button type="button" class="btn btn-success">
                                         <i class="material-icons">edit</i>
-                                    </button></a>
-                                     <a href="{{route('storedelete', $cities->store_id)}}" button type="button" class="btn btn-danger">
-                                        <i class="material-icons">close</i>
-                                    </button></a>
+                                  
                                     <a target="_blank" rel="noopener noreferrer" href="{{route('secret-login', $cities->store_id)}}" style="padding-top:24px; background-color:black" button type="button" class="btn btn-success">
                                        <i class="fa fa-user-secret fa-2x"></i>
                                     </button></a>

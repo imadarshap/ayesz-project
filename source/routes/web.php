@@ -12,10 +12,10 @@ use App\Http\Controllers\Web\WebHomeController;
 |
 */
 
-Route::get('/clear-cache', function() {
-    Artisan::call('config:cache');
-    return "Cache is cleared";
-});
+// Route::get('/clear-cache', function() {
+//     Artisan::call('config:cache');
+//     return "Cache is cleared";
+// });
 
 
 Route::group(['prefix'=>'web', ['middleware' => ['XSS']], 'namespace'=>'Web'], function(){
@@ -48,6 +48,9 @@ Route::group(['prefix'=>'', ['middleware' => ['XSS']], 'namespace'=>'Admin'], fu
 	Route::get('privacy-policy', 'LoginController@privacyPolicy')->name('privacy-policy');
 	Route::get('privacy', 'LoginController@privacy')->name('privacy');
 	Route::get('terms-conditions', 'LoginController@termsConditions')->name('terms-conditions');
+	Route::get('shipping-policy', 'LoginController@shippingPolicy')->name('shipping-policy');
+	Route::get('refund-policy', 'LoginController@refundPolicy')->name('refund-policy');
+	Route::get('return-policy', 'LoginController@returnPolicy')->name('return-policy');
 	Route::get('career-opportunities', 'LoginController@careerOpportunities')->name('career-opportunities');
 	Route::get('admin-login', 'LoginController@adminLogin')->name('adminLogin');
 	Route::post('loginCheck','LoginController@adminLoginCheck')->name('adminLoginCheck');

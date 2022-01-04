@@ -25,6 +25,9 @@ class DriverloginController extends Controller
     					->first();
 
     	if($checkdriver){
+    	    $checkDeviceId = DB::table('delivery_boy')
+    		                       ->where('device_id',$device_id)
+    		                        ->update(['device_id'=>'']);
     		   $updateDeviceId = DB::table('delivery_boy')
     		                       ->where('boy_phone', $phone)
     		                        ->update(['device_id'=>$device_id]);

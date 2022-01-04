@@ -85,11 +85,11 @@ class AdminorderController extends Controller
                 
         $ord =DB::table('orders')
              ->join('users', 'orders.user_id', '=','users.user_id')
-             ->orderBy('orders.delivery_date','DESC')
+             ->orderBy('orders.order_id','DESC')
              ->where('orders.order_status', 'Pending')
-             ->orWhere('orders.order_status', 'Out_For_Delivery')
-             ->orWhere('orders.order_status', 'Confirmed')
-             ->orWhere('orders.order_status', 'Accepted_By_Delivery_Agent')
+            //  ->orWhere('orders.order_status', 'Out_For_Delivery')
+            //  ->orWhere('orders.order_status', 'Confirmed')
+            //  ->orWhere('orders.order_status', 'Accepted_By_Delivery_Agent')
              ->get();
              
          $details  =   DB::table('orders')
@@ -201,8 +201,9 @@ class AdminorderController extends Controller
              ->where('order_status','!=', 'completed')
              ->where('order_status','!=', 'cancelled')
               ->where('payment_method','!=', NULL)
-             ->where('store_id', 0)
-             ->paginate(10);
+             ->where('order_status','=', 'Rejected_By_Vendor')
+            //  ->where('store_id', 0)
+             ->paginate(10000);
              
             
         $nearbystores = DB::table('store')

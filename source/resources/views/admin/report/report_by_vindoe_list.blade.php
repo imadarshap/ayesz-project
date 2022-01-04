@@ -208,6 +208,7 @@
             <th>Vendor Addres</th>
             <th>Phone</th>
         	<th>Email</th>
+        	<th>Admin Share</th>
         </tr>
     </thead>
     <tbody>
@@ -237,6 +238,7 @@
             <td><?php if(!empty($value->address)){  echo $value->address; } ?></td>
             <td><?php if(!empty($value->phone_number)){ echo $value->phone_number; } ?></td>
             <td><?php if(!empty($value->email)){  echo $value->email; } ?></td>
+              <td><?php if(!empty($value->admin_share)){  echo $value->admin_share; } ?></td>
         </tr>
 
           <?php  }
@@ -268,6 +270,7 @@
             <th>Vendor Addres</th>
             <th>Phone</th>
             <th>Email</th>
+            <th>Admin Share</th>
         </tr>
     </tfoot>
 </table>

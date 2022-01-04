@@ -82,9 +82,7 @@
                 <a href="{{route('EditD_boy',$d_boys->dboy_id)}}" rel="tooltip" class="btn btn-success">
                     <i class="material-icons">edit</i>
                 </a>
-               <a href="{{route('DeleteD_boy',$d_boys->dboy_id)}}" rel="tooltip" class="btn btn-danger">
-                    <i class="material-icons">close</i>
-                </a>
+
             </td>
         </tr>
           @php $i++; @endphp

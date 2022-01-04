@@ -56,28 +56,29 @@
             <th>End Date</th>
             <th>Uses Limit Per User</th>
             <th>Cart Value</th>
+            <th>Max Cart Value</th>
             <th class="text-center">Actions</th>
         </tr>
     </thead>
     <tbody>
-           @if(count($coupon)>0)
+           @if(count($coupons)>0)
           @php $i=1; @endphp
-          @foreach($coupon as $cities)
+          @foreach($coupons as $coupon)
         <tr>
             <td class="text-center">{{$i}}</td>
-            <td>{{$cities->coupon_name}}</td>
-            <td>{{$cities->amount}}</td>
-            <td>{{$cities->type}}</td>
-            <td>{{$cities->start_date}}</td>
-            <td>{{$cities->end_date}}</td>
-            <td>{{$cities->uses_restriction}}</td>
-            <td>{{$cities->cart_value}}</td>
-
+            <td>{{$coupon->coupon_name}}</td>
+            <td>{{$coupon->amount}}</td>
+            <td>{{$coupon->type}}</td>
+            <td>{{$coupon->start_date}}</td>
+            <td>{{$coupon->end_date}}</td>
+            <td>{{$coupon->uses_restriction}}</td>
+            <td>{{$coupon->cart_value}}</td>
+            <td>{{$coupon->max_cart_value}}</td>
             <td class="td-actions text-center">
-                <a href="{{route('editcoupon',$cities->coupon_id)}}" rel="tooltip" class="btn btn-success">
+                <a href="{{route('editcoupon',$coupon->coupon_id)}}" rel="tooltip" class="btn btn-success">
                     <i class="material-icons">edit</i>
                 </a>
-               <a href="{{route('deletecoupon',$cities->coupon_id)}}" rel="tooltip" class="btn btn-danger">
+               <a href="{{route('deletecoupon',$coupon->coupon_id)}}" rel="tooltip" class="btn btn-danger">
                     <i class="material-icons">close</i>
                 </a>
             </td>

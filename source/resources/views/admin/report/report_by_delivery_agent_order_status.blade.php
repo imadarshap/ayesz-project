@@ -179,13 +179,13 @@
                       <div class="col-md-3">
                         <div class="form">
                           <label class="bmd-label-floating">From Date</label>
-                        <input type="text" name="fromdate" value="{{$request->fromdate}}" id="fromdate" class="form-input datepicker" placeholder="Select a date"/>
+                        <input autocomplete="off" type="text" name="fromdate" value="{{$request->fromdate}}" id="fromdate" class="form-input datepicker" placeholder="Select a date"/>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="form">
                           <label class="bmd-label-floating">To Date</label>
-                        <input type="text" name="todate" id="todate" value="{{$request->todate}}" class="form-input datepicker" placeholder="Select a date"/>
+                        <input autocomplete="off" type="text" name="todate" id="todate" value="{{$request->todate}}" class="form-input datepicker" placeholder="Select a date"/>
                         </div>
                       </div>
     				</div>
@@ -216,6 +216,7 @@
         	<th>Order Date</th>
         	<th>Delivery Boy</th>
         	<th>Status</th>
+        	<th>PaymentMode</th>
         </tr>
     </thead>
     <tbody>
@@ -234,6 +235,7 @@
         	<td>{{$order->order_date}}</td>
         	<td>#{{$order->dboy_id}} - {{$order->boy_name}}</td>
         	<td>{{$order->order_status}}</td>
+        	<td>{{$order->payment_method}}</td>
         </tr>
           @php $i++; @endphp
                  @endforeach
@@ -251,6 +253,7 @@
         	<th>Order Date</th>
         	<th>Delivery Boy</th>
         	<th>Status</th>
+        	<th>PaymentMode</th>
         </tr>
     </tfoot>
 </table>

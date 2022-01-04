@@ -9,31 +9,33 @@ use Carbon\Carbon;
 
 class StoreloginController extends Controller
 {
- public function store_login(Request $request)
-    
-     {
+    public function store_login(Request $request)
+    {
     	$email = $request->email;
     	$password = $request->password;
     	$device_id = $request->device_id;
     	$checkstore1 = DB::table('store')
     					->where('email', $email)
     					->first();
-    if($checkstore1){					
+    if($checkstore1){
     	$checkstore = DB::table('store')
     					->where('email', $email)
     					->where('password', $password)
     					->first();
 
     	if($checkstore){
-    	    if($checkstore->admin_approval==1){  
+    	    if($checkstore->admin_approval==1){
+    	        
+    	        $checkDeviceId = DB::table('store')
+    		                       ->where('device_id',$device_id)
+    		                        ->update(['device_id'=>'']);
     		   $updateDeviceId = DB::table('store')
     		                       ->where('email', $email)
     		                        ->update(['device_id'=>$device_id]);
-    		                       
     		                        
     			$message = array('status'=>'1', 'message'=>'login successfully', 'data'=>[$checkstore]);
 	        	return $message;
-    	   }	   
+    	   }
     	   else{
     		$message = array('status'=>'0', 'message'=>'Your store is under approval. Please wait for admin approval.', 'data'=>[]);
 	        return $message;
@@ -57,9 +59,12 @@ class StoreloginController extends Controller
     {   
         $store_id = $request->store_id;
          $store=  DB::table('store')
-                ->leftJoin('orders','store.store_id','=','orders.store_id')
+                ->leftJoin('orders',function($join){
+					$join->on('store.store_id','=','orders.store_id')
+					->where('orders.order_status','Completed');
+				})
                ->leftJoin('store_earning','store.store_id','=','store_earning.store_id')
-               ->select('store.store_name','store.phone_number','store.email','store.address','store_earning.paid',DB::raw('SUM(orders.total_price)-SUM(orders.total_price)*(store.admin_share)/100 as store_earning'))
+               ->select('store.store_name','store.phone_number','store.email','store.address','store_earning.paid',DB::raw('SUM(orders.price_without_delivery)-(SUM(orders.price_without_delivery)*(store.admin_share)/100) as store_earning'))
                ->groupBy('store.store_name','store.phone_number','store.email','store.address','store_earning.paid','store.admin_share')
                 ->where('store.store_id', $store_id )
                 ->first();

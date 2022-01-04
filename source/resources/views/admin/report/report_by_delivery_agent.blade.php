@@ -174,13 +174,13 @@
                       <div class="col-md-3">
                         <div class="form">
                           <label class="bmd-label-floating">From Date</label>
-                        <input type="text" name="fromdate" value="{{$request->fromdate}}" id="fromdate" class="form-input datepicker" placeholder="Select a date"/>
+                        <input autocomplete="off" type="text" name="fromdate" value="{{$request->fromdate}}" id="fromdate" class="form-input datepicker" placeholder="Select a date"/>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="form">
                           <label class="bmd-label-floating">To Date</label>
-                        <input type="text" name="todate" id="todate" value="{{$request->todate}}" class="form-input datepicker" placeholder="Select a date"/>
+                        <input autocomplete="off" type="text" name="todate" id="todate" value="{{$request->todate}}" class="form-input datepicker" placeholder="Select a date"/>
                         </div>
                       </div>
     				</div>

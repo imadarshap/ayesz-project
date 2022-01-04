@@ -30,6 +30,30 @@ public function privacy(Request $request)
                 ->first();
   	return view('admin.auth.privacy', compact('logo'));
   }
+ 
+public function shippingPolicy(Request $request)
+  {
+        $logo = DB::table('tbl_web_setting')
+                ->where('set_id', '1')
+                ->first();
+  	return view('admin.auth.shipping-policy', compact('logo'));
+  }
+  
+  public function refundPolicy(Request $request)
+  {
+        $logo = DB::table('tbl_web_setting')
+                ->where('set_id', '1')
+                ->first();
+  	return view('admin.auth.refund-policy', compact('logo'));
+  }
+  
+  public function returnPolicy(Request $request)
+  {
+        $logo = DB::table('tbl_web_setting')
+                ->where('set_id', '1')
+                ->first();
+  	return view('admin.auth.return-policy', compact('logo'));
+  }
   public function home(Request $request)
   {
         $logo = DB::table('tbl_web_setting')

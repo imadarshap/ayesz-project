@@ -3,6 +3,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/scroller/2.0.3/js/dataTables.scroller.min.js">
 
 <style>
     .material-icons{
@@ -101,9 +102,45 @@
     <div>
     </div>
      <script>
+     
+     
+//      $(document).ready(function() {
+//     $('#myTable').DataTable({
+//         dom: 'Plfrtip',
+//         ajax: '../../../../examples/ajax/data/data_50k.txt',
+//         columns: [
+//             { data: "name" },
+//             { data: "position" },
+//             { data: "office" },
+//             { data: "extn" },
+//             { data: "start_date" },
+//             { data: "salary" }
+//         ],
+//         deferRender: true
+//     });
+// });
+
         $(document).ready( function () {
             $('#myTable').DataTable();
+            
+        //      $('#myTable').DataTable( {
+        //     data:           data,
+        //     deferRender:    true,
+        //     scrollY:        200,
+        //     scrollCollapse: true,
+        //     scroller:       true
+        // } );
+        
+            
+            
+            
         } );
+        
+        
+        
+       
+        
+        
     </script>
     <script>
     let elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
@@ -114,20 +151,20 @@
     </script>
 <script>
     $(document).ready(function(){
-    $('.js-switch').change(function () {
-        let status = $(this).prop('checked') === true ? 1 : 0;
-        let product_id = $(this).data('id');
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: '{{ route("hideprod") }}',
-            data: {'status': status, 'product_id': product_id},
-            success: function (data) {
-                console.log(data.message);
-            }
+        $('.js-switch').change(function () {
+            let status = $(this).prop('checked') === true ? 1 : 0;
+            let product_id = $(this).data('id');
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: '{{ route("hideprod") }}',
+                data: {'status': status, 'product_id': product_id},
+                success: function (data) {
+                    console.log(data.message);
+                }
+            });
         });
     });
-});
 </script>
      
     @endsection

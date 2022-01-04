@@ -14,7 +14,7 @@ class PaymentController extends Controller
         $paymentvia = DB::table('payment_via')
                    ->first();
                    
-        if($paymentvia)   { 
+        if($paymentvia)   {
             $message = array('status'=>'1', 'message'=>'Payment Via', 'data'=>$paymentvia);
             return $message;
         }

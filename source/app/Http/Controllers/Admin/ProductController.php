@@ -26,6 +26,71 @@ class ProductController extends Controller
         
     	return view('admin.product.list', compact('title',"admin", "logo","product"));
     }
+    
+    /*
+   AJAX request
+   */
+   public function getEmployees(Request $request){
+
+     ## Read value
+     $draw = $request->get('draw');
+     $start = $request->get("start");
+     $rowperpage = $request->get("length"); // Rows display per page
+
+     $columnIndex_arr = $request->get('order');
+     $columnName_arr = $request->get('columns');
+     $order_arr = $request->get('order');
+     $search_arr = $request->get('search');
+
+     $columnIndex = $columnIndex_arr[0]['column']; // Column index
+     $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+     $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+     $searchValue = $search_arr['value']; // Search value
+
+     // Total records
+     $product = DB::table('product')
+                    ->join('categories','product.cat_id','=','categories.cat_id')
+                   ->get();
+                   
+    //  $totalRecords = Employees::select('count(*) as allcount')->count();
+     $totalRecords = Employees::select('count(*) as allcount')->count();
+     $totalRecordswithFilter = Employees::select('count(*) as allcount')->where('name', 'like', '%' .$searchValue . '%')->count();
+
+     // Fetch records
+     $records = Employees::orderBy($columnName,$columnSortOrder)
+       ->where('employees.name', 'like', '%' .$searchValue . '%')
+       ->select('employees.*')
+       ->skip($start)
+       ->take($rowperpage)
+       ->get();
+
+     $data_arr = array();
+     
+     foreach($records as $record){
+        $id = $record->id;
+        $username = $record->username;
+        $name = $record->name;
+        $email = $record->email;
+
+        $data_arr[] = array(
+          "id" => $id,
+          "username" => $username,
+          "name" => $name,
+          "email" => $email
+        );
+     }
+
+     $response = array(
+        "draw" => intval($draw),
+        "iTotalRecords" => $totalRecords,
+        "iTotalDisplayRecords" => $totalRecordswithFilter,
+        "aaData" => $data_arr
+     );
+
+     echo json_encode($response);
+     exit;
+   }
+   
 
     
      public function AddProduct(Request $request)
@@ -209,6 +274,52 @@ class ProductController extends Controller
                     ->first();
     		$city = DB::table('city')
                 ->get();
+                
+                $cat = DB::table('categories')
+                   ->select('parent')
+                   ->get();
+                   
+        if(count($cat)>0){           
+        foreach($cat as $cats) {
+            $a = $cats->parent;
+           $aa[] = array($a); 
+        }
+        }
+        else{
+            $a = 0;
+           $aa[] = array($a);
+        }
+    
+    	$category = array();
+    
+    	$cats = DB::table('categories')
+                  ->where('parent', '=', 0)
+                  ->get();
+    	foreach($cats as $cat){
+        	array_push($category,$cat);
+        	$subcats = DB::table('categories')
+                   ->where('parent', '=', $cat->cat_id)
+                   ->get();	
+        	if(!empty($subcats)){
+            	foreach($subcats as $subcat){
+                	$subcat = json_decode(json_encode($subcat), true);
+                	$subcat['title'] = " - ".$subcat['title'];
+                	array_push($category,$subcat);
+                	$subcats2 = DB::table('categories')
+                   		->where('parent', '=', $subcat['cat_id'])
+                   		->get();
+                	if(!empty($subcats2)){
+                		foreach($subcats2 as $subcat){
+                        	$subcat = json_decode(json_encode($subcat), true);
+                    		$subcat['title'] = " -- ".$subcat['title'];
+                    		array_push($category,$subcat);
+                		}
+            		}
+                }
+            }
+        }
+     	$category = json_decode(json_encode($category), false);
+     	
     
     	$varient_id = DB::table('product_varient')->select('varient_id')->where('product_id',$product_id)->first()->varient_id;
     	$stores = DB::table('store')
@@ -218,11 +329,12 @@ class ProductController extends Controller
 					->get();
                     
 
-        return view('admin.product.edit',compact("admin_email","admin","logo","title","product","city","stores"));
+        return view('admin.product.edit',compact("admin_email", "category", "admin","logo","title","product","city","stores"));
     }
 
     public function UpdateProduct(Request $request)
     {
+        $category_id=$request->cat_id;
         $product_id = $request->product_id;
         $product_name = $request->product_name;
         $date=date('d-m-Y');
@@ -271,6 +383,7 @@ class ProductController extends Controller
                        ->where('product_id', $product_id)
                             ->update([
                                 'product_name'=>$product_name,
+                                'cat_id'=>$category_id,
                                 'product_image'=>$product_image,
                             	'city_id'=>$request->city
                             ]);
