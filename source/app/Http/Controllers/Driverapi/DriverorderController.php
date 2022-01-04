@@ -489,7 +489,7 @@ class DriverorderController extends Controller
             }
 
             //////send app notification////
-            if ($sms->app == 1)
+            if (!empty($sms) && $sms->app == 1)
             {
                 if ($ord->payment_method == "COD" || $ord->payment_method == "cod")
                 {
@@ -679,7 +679,7 @@ class DriverorderController extends Controller
 
             }
             ////send notification to app///
-            if ($sms->app == 1)
+            if (!empty($sms) &&$sms->app == 1)
             {
                 $notification_title = "Order Delivered";
                 $notification_text = "Delivery Completed: Your order id #" . $cart_id . " contains of " . $prod_name . " of price " . $currency->currency_sign . " " . $price2 . " is Delivered Successfully.";

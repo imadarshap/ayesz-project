@@ -438,9 +438,9 @@ class OrderController extends Controller
             return $message;
         }
 
-        // if($orderr->payment_method !=null){
-        //     return array('status'=>'1', 'message'=>'Order is already in process');
-        // }
+        if($orderr->payment_method !=null){
+            return array('status'=>'1', 'message'=>'Order is already in process');
+        }
 
         $var = DB::table('store_orders')
             ->where('order_cart_id', $cart_id)
@@ -584,7 +584,7 @@ class OrderController extends Controller
             if ($email_status == 1) {
                 $codorderplaced = $this->codorderplacedMail($cart_id, $prod_name, $price2, $delivery_date, $time_slot, $user_email, $user_name);
             }
-            if ($email->app == 1) {
+            if (!empty($email) && $email->app == 1) {
                 $notification_title = "WooHoo! Your Order is Placed";
                 $notification_text = "Order Successfully Placed: Your order id #" . $cart_id . " contains of " . $prod_name . " of price rs " . $price2 . " is placed Successfully.You can expect your item(s) will be delivered on " . $delivery_date;
 
@@ -830,7 +830,7 @@ class OrderController extends Controller
                 if ($email_status == 1) {
                     $orderplaced = $this->orderplacedMail($cart_id, $prod_name, $price2, $delivery_date, $time_slot, $user_email, $user_name);
                 }
-                if ($email->app == 1) {
+                if (!empty($email) && $email->app == 1) {
                     $notification_title = "WooHoo! Your Order is Placed";
                     $notification_text = "Order Successfully Placed: Your order id #" . $cart_id . " contains of " . $prod_name . " of price rs " . $price2 . " is placed Successfully.You can expect your item(s) will be delivered on " . $delivery_date;
 
