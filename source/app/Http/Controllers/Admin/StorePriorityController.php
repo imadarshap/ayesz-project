@@ -76,7 +76,7 @@ class StorePriorityController extends Controller
         $address = $request->address;
         $addres = str_replace(" ", "+", $address);
         $address1 = str_replace("-", "+", $addres);
-         $checkmap = DB::table('map_API')
+         $checkmap = DB::table('map_api')
                   ->first();
          $mapset= DB::table('map_settings')
                 ->first();

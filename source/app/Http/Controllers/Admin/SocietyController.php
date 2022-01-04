@@ -42,7 +42,7 @@ class SocietyController extends Controller
         $city = DB::table('city')
                 ->get();
             
-          $map1 = DB::table('map_API')
+          $map1 = DB::table('map_api')
              ->first();
          $map = $map1->map_api_key;     
          $mapset = DB::table('map_settings')
@@ -103,7 +103,7 @@ class SocietyController extends Controller
         $city = DB::table('society')
                 ->where('society_id',$society_id)
                 ->first();
-          $map1 = DB::table('map_API')
+          $map1 = DB::table('map_api')
              ->first();
          $map = $map1->map_api_key;   
           $mapset = DB::table('map_settings')

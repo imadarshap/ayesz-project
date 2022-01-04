@@ -212,7 +212,7 @@ class SettingsController extends Controller
     	  $logo = DB::table('tbl_web_setting')
                 ->first();	
                 
-            $map = DB::table('map_API')
+            $map = DB::table('map_api')
                 ->first();   
          return view('admin.settings.map_api',compact("admin_email","admin",'title','logo','map'));
       
@@ -233,19 +233,19 @@ class SettingsController extends Controller
         );
         
         
-        $check = DB::table('map_API')
+        $check = DB::table('map_api')
                ->first();
        
     
       if($check){
         
 
-        $update = DB::table('map_API')
+        $update = DB::table('map_api')
                 ->update(['map_api_key'=> $api_key]);
     
       }
       else{
-          $update = DB::table('map_API')
+          $update = DB::table('map_api')
                 ->insert(['map_api_key'=> $api_key]);
       }
      if($update){

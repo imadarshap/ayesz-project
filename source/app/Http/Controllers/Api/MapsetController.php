@@ -26,7 +26,7 @@ class MapsetController extends Controller
     
     public function google_map(Request $request)
     {  
-        $mapapi = DB::table('map_API')
+        $mapapi = DB::table('map_api')
                    ->first();
                    
         if($mapapi)   { 

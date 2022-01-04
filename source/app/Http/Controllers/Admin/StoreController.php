@@ -40,7 +40,7 @@ class StoreController extends Controller
         
         $city = DB::table('city')
                 ->get();
-        $map1 = DB::table('map_API')
+        $map1 = DB::table('map_api')
              ->first();
          $map = $map1->map_api_key;     
          $mapset = DB::table('map_settings')
@@ -68,7 +68,7 @@ class StoreController extends Controller
         $discount = str_replace("%",'', $share);
         $addres = str_replace(" ", "+", $address);
         $address1 = str_replace("-", "+", $addres);
-        $checkmap = DB::table('map_API')
+        $checkmap = DB::table('map_api')
                   ->first();
          $mapset= DB::table('map_settings')
                 ->first();
@@ -174,7 +174,7 @@ class StoreController extends Controller
                     ->get();
                     
               
-       $map1 = DB::table('map_API')
+       $map1 = DB::table('map_api')
              ->first();
          $map = $map1->map_api_key;   
         $store = DB::table('store')
@@ -204,7 +204,7 @@ class StoreController extends Controller
         $address = $request->address;
         $addres = str_replace(" ", "+", $address);
         $address1 = str_replace("-", "+", $addres);
-         $checkmap = DB::table('map_API')
+         $checkmap = DB::table('map_api')
                   ->first();
          $mapset= DB::table('map_settings')
                 ->first();

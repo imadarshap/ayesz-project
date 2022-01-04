@@ -26,7 +26,7 @@ class MapController extends Controller
     	  $logo = DB::table('tbl_web_setting')
                 ->first();	
                 
-          $g = DB::table('map_API')
+          $g = DB::table('map_api')
                 ->first();   
           $m = DB::table('mapbox')
                 ->first(); 
@@ -52,17 +52,17 @@ class MapController extends Controller
         );
         
         
-        $check = DB::table('map_API')
+        $check = DB::table('map_api')
                ->first();
        
     
       if($check){
-        $update = DB::table('map_API')
+        $update = DB::table('map_api')
                 ->update(['map_api_key'=> $api_key]);
     
       }
       else{
-          $update = DB::table('map_API')
+          $update = DB::table('map_api')
                 ->insert(['map_api_key'=> $api_key]);
                
       }

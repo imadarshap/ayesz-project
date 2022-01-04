@@ -53,7 +53,7 @@
                     <table class="display" id="myTable">
                         <thead>
                             <tr>
-                                <th>Product id</th>
+                                <th>Product ID</th>
                                 <th>Product Image</th>
                                 <th>Product Name</th>
                                 <th>Category</th>

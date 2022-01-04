@@ -44,7 +44,7 @@ class DeliveryController extends Controller
         $city =DB::table('city')
               ->get();
               
-         $map1 = DB::table('map_API')
+         $map1 = DB::table('map_api')
              ->first();
          $map = $map1->map_api_key;      
           $mapset = DB::table('map_settings')
@@ -67,7 +67,7 @@ class DeliveryController extends Controller
        
         $addres = str_replace(" ", "+", $boy_loc);
         $address1 = str_replace("-", "+", $addres);
-         $mapapi = DB::table('map_API')
+         $mapapi = DB::table('map_api')
                  ->first();
          $mapset= DB::table('map_settings')
                 ->first();        
@@ -155,7 +155,7 @@ class DeliveryController extends Controller
         $city =DB::table('city')
               ->get();
               
-         $map1 = DB::table('map_API')
+         $map1 = DB::table('map_api')
              ->first();
          $map = $map1->map_api_key; 
          $mapset = DB::table('map_settings')
@@ -188,7 +188,7 @@ class DeliveryController extends Controller
              return redirect()->back()->withErrors('This Phone Number Is Already Registered With Another Delivery Agent');
         } 
         
-         $mapapi = DB::table('map_API')
+         $mapapi = DB::table('map_api')
                  ->first();
                  
         $key = $mapapi->map_api_key;  
