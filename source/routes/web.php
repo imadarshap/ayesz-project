@@ -105,6 +105,7 @@ Route::group(['prefix'=>'', ['middleware' => ['XSS']], 'namespace'=>'Admin'], fu
 	Route::get('product/edit/{product_id}','ProductController@EditProduct')->name('EditProduct');
  	Route::post('product/update/{product_id}','ProductController@UpdateProduct')->name('UpdateProduct');
  	Route::get('product/delete/{product_id}','ProductController@DeleteProduct')->name('DeleteProduct');
+	Route::get('product/get_list', 'ProductController@getList')->name('getProductList');
       
       
     //////Product Varient//////////

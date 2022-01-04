@@ -424,6 +424,10 @@ class OrderController extends Controller
         $orderr = DB::table('orders')
             ->where('cart_id', $cart_id)
             ->first();
+        if(empty($orderr)){
+            $message = array('status'=>'0', 'message'=>'Invalid Order');
+            return $message;
+        }
         $store_id = $orderr->store_id;
         $user_id = $orderr->user_id;
         $delivery_date = $orderr->delivery_date;
@@ -434,9 +438,9 @@ class OrderController extends Controller
             return $message;
         }
 
-        if($orderr->payment_method !=null){
-            return array('status'=>'1', 'message'=>'Order is already in process');
-        }
+        // if($orderr->payment_method !=null){
+        //     return array('status'=>'1', 'message'=>'Order is already in process');
+        // }
 
         $var = DB::table('store_orders')
             ->where('order_cart_id', $cart_id)
@@ -557,7 +561,8 @@ class OrderController extends Controller
                 ->select('sms')
                 ->where('user_id', $user_id)
                 ->first();
-            $sms_status = $sms->sms;
+            
+            $sms_status = (!empty($sms)) ? $sms->sms:0;
 
             if ($sms_status == 1) {
                 $orderplacedmsg = $this->ordersuccessfull($cart_id, $prod_name, $price2, $delivery_date, $time_slot, $user_phone);
@@ -571,10 +576,11 @@ class OrderController extends Controller
                 ->select('user_email', 'user_name')
                 ->where('user_id', $user_id)
                 ->first();
+
             $user_email = $q->user_email;
 
             $user_name = $q->user_name;
-            $email_status = $email->email;
+            $email_status = (!empty($email))?$email->email:0;
             if ($email_status == 1) {
                 $codorderplaced = $this->codorderplacedMail($cart_id, $prod_name, $price2, $delivery_date, $time_slot, $user_email, $user_name);
             }
@@ -805,7 +811,7 @@ class OrderController extends Controller
                     ->select('sms')
                     ->where('user_id', $user_id)
                     ->first();
-                $sms_status = $sms->sms;
+                $sms_status = (!empty($sms)) ? $sms->sms:0;
                 if ($sms_status == 1) {
                     $codorderplaced = $this->ordersuccessfull($cart_id, $prod_name, $price2, $delivery_date, $time_slot, $user_phone);
                 }
@@ -814,7 +820,7 @@ class OrderController extends Controller
                     ->select('email', 'app')
                     ->where('user_id', $user_id)
                     ->first();
-                $email_status = $email->email;
+                $email_status = (!empty($email))?$email->email:0;
                 $q = DB::table('users')
                     ->select('user_email', 'user_name')
                     ->where('user_id', $user_id)

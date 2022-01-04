@@ -478,7 +478,7 @@ class DriverorderController extends Controller
             $sms = DB::table('notificationby')->select('sms', 'app')
                 ->where('user_id', $ord->user_id)
                 ->first();
-            $sms_status = $sms->sms;
+            $sms_status = (!empty($sms)) ? $sms->sms:0;
             $sms_api_key = DB::table('msg91')->select('api_key', 'sender_id')
                 ->first();
             $api_key = $sms_api_key->api_key;
@@ -577,7 +577,7 @@ class DriverorderController extends Controller
             $email = DB::table('notificationby')->select('email')
                 ->where('user_id', $ord->user_id)
                 ->first();
-            $email_status = $email->email;
+            $email_status = (!empty($email))?$email->email:0;
             $rem_price = $ord->rem_price;
             if ($email_status == 1)
             {
@@ -668,7 +668,7 @@ class DriverorderController extends Controller
             $sms = DB::table('notificationby')->select('sms', 'app')
                 ->where('user_id', $ord->user_id)
                 ->first();
-            $sms_status = $sms->sms;
+            $sms_status = (!empty($sms)) ? $sms->sms:0;
             $sms_api_key = DB::table('msg91')->select('api_key', 'sender_id')
                 ->first();
             $api_key = $sms_api_key->api_key;
@@ -727,7 +727,8 @@ class DriverorderController extends Controller
             $email = DB::table('notificationby')->select('email')
                 ->where('user_id', $ord->user_id)
                 ->first();
-            $email_status = $email->email;
+            $email_status = (!empty($email))?$email->email:0;
+            $sms_status = (!empty($sms)) ? $sms->sms:0;
             if ($email_status == 1)
             {
                 $q = DB::table('users')->select('user_email', 'user_name')

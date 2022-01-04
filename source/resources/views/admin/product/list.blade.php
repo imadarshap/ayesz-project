@@ -47,7 +47,7 @@
 <div class="col-lg-12">
 <div class="card">    
 <div class="card-header card-header-primary">
-      <h4 class="card-title ">Products List</h4>
+      <h4 class="card-title ">Products List ({{count($product)}} Products)</h4>
     </div>
 <div class="container"><br>    
 <table class="display" id="myTable">
@@ -121,7 +121,12 @@
 // });
 
         $(document).ready( function () {
-            $('#myTable').DataTable();
+            // $('#myTable').DataTable();
+            $('#myTable').DataTable( {
+                "processing": true,
+                "serverSide": true,
+                "ajax": "{{route('getProductList)}}"
+            } );
             
         //      $('#myTable').DataTable( {
         //     data:           data,

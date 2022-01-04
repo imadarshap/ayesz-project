@@ -22,6 +22,7 @@ class ProductController extends Controller
                 ->first();
            $product = DB::table('product')
                     ->join('categories','product.cat_id','=','categories.cat_id')
+                    ->limit(100)
                    ->get();
         
     	return view('admin.product.list', compact('title',"admin", "logo","product"));
