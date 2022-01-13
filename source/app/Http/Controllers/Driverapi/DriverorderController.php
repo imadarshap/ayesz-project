@@ -303,7 +303,6 @@ class DriverorderController extends Controller
                 $date = $request->from_date;
                 $to_date = $request->to_date;
             break;
-
         }
         $dboy_id = $request->dboy_id;
 
@@ -311,7 +310,13 @@ class DriverorderController extends Controller
             ->join('store', 'orders.store_id', '=', 'store.store_id')
             ->join('address', 'orders.address_id', '=', 'address.address_id')
             ->join('delivery_boy', 'orders.dboy_id', '=', 'delivery_boy.dboy_id')
-            ->select('orders.order_status', 'orders.cart_id', 'users.user_name', 'users.user_phone', 'orders.delivery_date', 'orders.total_price', 'orders.delivery_charge', 'orders.rem_price', 'orders.payment_status', 'orders.payment_method', 'delivery_boy.boy_name', 'delivery_boy.boy_phone', 'orders.time_slot', 'store.address as store_address', 'store.store_name', 'store.phone_number', 'store.lat as lat', 'store.lng as lng', 'address.lat as userlat', 'address.lng as userlng', 'delivery_boy.lat as dboy_lat', 'delivery_boy.lng as dboy_lng', 'address.receiver_name', 'address.receiver_phone', 'address.city', 'address.society', 'address.house_no', 'address.landmark', 'address.state', 'orders.coupon_id', 'orders.coupon_discount', 'orders.paid_by_wallet')
+            ->select('orders.order_status', 'orders.cart_id', 'users.user_name', 'users.user_phone', 'orders.delivery_date', 
+                    'orders.total_price', 'orders.delivery_charge', 'orders.rem_price', 'orders.payment_status', 'orders.payment_method', 
+                    'delivery_boy.boy_name', 'delivery_boy.boy_phone', 'orders.time_slot', 'store.address as store_address', 
+                    'store.store_name', 'store.phone_number', 'store.lat as lat', 'store.lng as lng', 'address.lat as userlat', 
+                    'address.lng as userlng', 'delivery_boy.lat as dboy_lat', 'delivery_boy.lng as dboy_lng', 'address.receiver_name', 
+                    'address.receiver_phone', 'address.city', 'address.society', 'address.house_no', 'address.landmark', 'address.state', 
+                    'address.pincode','orders.coupon_id', 'orders.coupon_discount', 'orders.paid_by_wallet')
         // ->where('orders.order_status','!=', 'completed')
         
             ->where('orders.store_id', '!=', 0)
@@ -351,8 +356,8 @@ class DriverorderController extends Controller
                     'dboy_lng' => $ords->dboy_lng,
                     'cart_id' => $cart_id,
                     'sale_id' => $cart_id,
-                    'user_name' => $ords->user_name,
-                    'user_phone' => $ords->user_phone,
+                    'user_name' => $ords->receiver_name,
+                    'user_phone' => $ords->receiver_phone,
                     'remaining_price' => $ords->rem_price,
                     'delivery_boy_name' => $ords->boy_name,
                     'delivery_boy_phone' => $ords->boy_phone,
@@ -364,7 +369,8 @@ class DriverorderController extends Controller
                     'delivery_charge' => $ords->delivery_charge,
                     'coupon_id' => $ords->coupon_id,
                     'coupon_discount' => $ords->coupon_discount,
-                    'paid_by_wallet' => $ords->paid_by_wallet
+                    'paid_by_wallet' => $ords->paid_by_wallet,
+                    'receiver'
                 );
             }
         }
