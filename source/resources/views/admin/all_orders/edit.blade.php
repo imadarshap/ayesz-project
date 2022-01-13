@@ -101,7 +101,7 @@
                 <select name="dboy_id" class="form-control">
                   <option value="0">Select Delivery Agent</option>
                   @foreach($dboys as $dboy)
-                  <option @if ($order->dboy_id == $dboy->dboy_id) "selected" @endif value="{{$dboy->dboy_id}}">
+                  <option @if($order->dboy_id == $dboy->dboy_id) selected @endif value="{{$dboy->dboy_id}}">
                     {{$dboy->boy_name}} ({{$dboy->boy_phone}})
                   </option>
                   @endforeach

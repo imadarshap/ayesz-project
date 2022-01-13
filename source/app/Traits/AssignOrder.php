@@ -5,21 +5,17 @@ namespace App\Traits;
 use Illuminate\Support\Facades\DB;
 
 trait AssignOrder{
-    public function assign($cart_id, $dboy)
+    public function assign($order, $dboy)
     {
         $curr = DB::table('currency')
             ->first();
 
-        $order =   DB::table('orders')
-            ->where('cart_id', $cart_id)
-            ->first();
-
         $items = DB::table('store_orders')
-            ->where('order_cart_id', $cart_id)
+            ->where('order_cart_id', $order->cart_id)
             ->get();
         
         $updateOrderStatus = DB::table('orders')
-            ->where('cart_id', $cart_id)
+            ->where('cart_id', $order->cart_id)
             ->update([
                 'order_status' => 'Confirmed',
                 'dboy_id' => $dboy->dboy_id
@@ -27,7 +23,7 @@ trait AssignOrder{
 
 
         if ($updateOrderStatus) {
-            $notification_text = "You got an order with cart id #" . $cart_id . " of price " . $curr->currency_sign . " " . ($order->total_price - $order->coupon_discount) . ". It will have to delivered on " . $order->delivery_date;
+            $notification_text = "You got an order with cart id #" . $order->cart_id . " of price " . $curr->currency_sign . " " . ($order->total_price - $order->coupon_discount) . ". It will have to delivered on " . $order->delivery_date;
 
             $getFcm = DB::table('fcm')
                 ->where('id', '1')
@@ -40,7 +36,7 @@ trait AssignOrder{
 
             $notificationData = [
                 "dboy_id" => $dboy->dboy_id,
-                "cart_id" => $cart_id,
+                "cart_id" => $order->cart_id,
                 'title' => "New Delivery Order",
                 'body' => $notification_text,
             ];

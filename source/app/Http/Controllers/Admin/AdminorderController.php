@@ -182,7 +182,7 @@ class AdminorderController extends Controller
                 $new_dboy = DB::table('delivery_boy')->where('dboy_id', $request->dboy_id)->first();
                 if (!empty($new_dboy)) {
                     if ($new_dboy->status != 0) {
-                        $res = $this->assign($order->store_id, $order->cart_id, $order->dboy_id);
+                        $res = $this->assign($order, $new_dboy);
                         if($res['status']=='1'){
                             $success[] = $res["message"];
                             $log = new AdminLog();
