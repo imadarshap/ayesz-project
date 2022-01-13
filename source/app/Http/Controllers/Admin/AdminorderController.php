@@ -186,7 +186,7 @@ class AdminorderController extends Controller
                         $log->admin_id = $admin->id;
                         $log->type = 'order';
                         $log->content_id = $order->order_id;
-                        $log->log = 'Delivery Agent changed from "#' . $dboy->id . '-' . $dboy->boy_name . ' (' . $dboy->boy_phone . ')" to "#' . $new_dboy->id . '-' . $new_dboy->boy_name . ' (' . $new_dboy->boy_phone . ')"';
+                        $log->log = 'Delivery Agent changed from "#' . $dboy->dboy_id . '-' . $dboy->boy_name . ' (' . $dboy->boy_phone . ')" to "#' . $new_dboy->id . '-' . $new_dboy->boy_name . ' (' . $new_dboy->boy_phone . ')"';
                         $log->save();
 
                         $order->dboy_id = $request->dboy_id;
