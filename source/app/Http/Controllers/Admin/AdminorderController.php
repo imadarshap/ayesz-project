@@ -182,21 +182,26 @@ class AdminorderController extends Controller
                 $new_dboy = DB::table('delivery_boy')->where('dboy_id', $request->dboy_id)->first();
                 if (!empty($new_dboy)) {
                     if ($new_dboy->status != 0) {
-                        $log = new AdminLog();
-                        $log->admin_id = $admin->id;
-                        $log->type = 'order';
-                        $log->content_id = $order->order_id;
-                        $log->log = 'Delivery Agent changed from "#' . $dboy->dboy_id . '-' . $dboy->boy_name . ' (' . $dboy->boy_phone . ')" to "#' . $new_dboy->id . '-' . $new_dboy->boy_name . ' (' . $new_dboy->boy_phone . ')"';
-                        $log->save();
-
-                        $order->dboy_id = $request->dboy_id;
-                        $order->order_status = 'Confirmed';
-                        $order->save();
                         $res = $this->assign($order->store_id, $order->cart_id, $order->dboy_id);
-                        if($res['status']=='1')
+                        if($res['status']=='1'){
                             $success[] = $res["message"];
-                        else
+                            $log = new AdminLog();
+                            $log->admin_id = $admin->id;
+                            $log->type = 'order';
+                            $log->content_id = $order->order_id;
+                            if(!empty($dboy))
+                                $log->log = 'Delivery Agent changed from "#' . $dboy->dboy_id . '-' . $dboy->boy_name . ' (' . $dboy->boy_phone . ')" to "#' . $new_dboy->dboy_id . '-' . $new_dboy->boy_name . ' (' . $new_dboy->boy_phone . ')"';
+                            else
+                                $log->log = 'Order assigned to delivery agent "#' . $new_dboy->dboy_id . '-' . $new_dboy->boy_name . ' (' . $new_dboy->boy_phone . ')"';
+                            $log->save();
+
+                            $order->dboy_id = $request->dboy_id;
+                            $order->order_status = 'Confirmed';
+                            $order->save();
+                        }else{
                             $errors[] = $res["message"];
+                        }
+                        
                     } else {
                         $errors[] = "Selected Delivery Agent is not on duty";
                     }
