@@ -270,8 +270,11 @@ Route::group(['prefix' => '', ['middleware' => ['XSS']], 'namespace' => 'Admin']
 		////Pending orders/////
 		Route::get('admin/pending_orders', 'AdminorderController@admin_pen_orders')->name('admin_pen_orders');
 		//All Orders
-		Route::get('admin/all_orders', 'AdminorderController@allOrders')->name('allOrders');
-		
+		Route::get('admin/orders', 'AdminorderController@allOrders')->name('allOrders');
+		Route::get('admin/get_orders', 'AdminorderController@getOrders')->name('getOrders');
+		Route::get('admin/orders/edit/{id}', 'AdminorderController@editOrder')->name('editOrder');
+		Route::post('admin/orders/update/{id}', 'AdminorderController@updateOrder')->name('updateOrder');
+
 
 		Route::get('secretlogin/{id}', 'SecretloginController@secretlogin')->name('secret-login');
 		Route::post('admin/reject/order/{id}', 'AdminorderController@rejectorder')->name('admin_reject_order');
@@ -331,14 +334,18 @@ Route::group(['prefix' => 'store', ['middleware' => ['XSS']], 'namespace' => 'St
 		Route::get('product/add_multiple_products', 'ProductController@add_multiple_products')->name('add_multiple_products');
 		Route::post('product/added_multiple_products', 'ProductController@added_multiple_products')->name('added_multiple_products');
 
-
 		Route::get('product/delete/{id}', 'ProductController@delete_product')->name('delete_product');
 		Route::post('product/stock/{id}', 'ProductController@stock_update')->name('stock_update');
 		Route::get('logout', 'LoginController@logout')->name('storelogout');
 		Route::get('orders/next_day', 'AssignorderController@orders')->name('storeOrders');
 		Route::get('orders/today', 'AssignorderController@assignedorders')->name('storeassignedorders');
-		Route::post('orders/confirm/{cart_id}', 'AssignorderController@confirm_order')->name('store_confirm_order');
-		Route::get('orders/reject/{cart_id}', 'OrderController@reject_order')->name('store_reject_order');
+		Route::get('orders/all', 'AssignorderController@allOrders')->name('storeAllOrders');
+		Route::get('get_orders', 'AssignorderController@getOrders')->name('storeGetOrders');
+		Route::get('orders/show/{id}', 'AssignorderController@showOrder')->name('storeShowOrder');
+
+
+		Route::get('orders/confirm/{cart_id}', 'AssignorderController@confirm_order')->name('store_confirm_order');
+		Route::get('orders/reject/{cart_id}', 'AssignorderController@reject_order')->name('store_reject_order');
 		Route::get('orders/products/cancel/{store_order_id}', 'OrderController@cancel_products')->name('store_cancel_product');
 
 		Route::get('update/stock', 'ProductController@st_product')->name('st_product');

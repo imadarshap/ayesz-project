@@ -435,8 +435,6 @@ class ProductController extends Controller
         }
     }
 
-
-
     public function DeleteProduct(Request $request)
     {
         $product_id = $request->product_id;

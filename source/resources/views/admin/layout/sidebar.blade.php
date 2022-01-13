@@ -17,9 +17,16 @@
               <p>Dashboard</p>
             </a>
           </li>
+
+          <li class="{{ (strpos(request()->url(), 'admin/orders/') !== false) ? 'active' : '' }} nav-item">
+            <a class="nav-link" href="{{route('allOrders','all')}}" active>
+              <i class="material-icons">layers</i>
+              <p>Orders</p>
+            </a>
+          </li>
         
         
-        <li class="nav-item {{ (request()->is('admin/store/cancelledorders')) ? 'active' : '' }} {{ (request()->is('admin/completed_orders')) ? 'active' : '' }} {{ (request()->is('admin/pending_orders')) ? 'active' : '' }} {{ (request()->is('admin/cancelled_orders')) ? 'active' : '' }}">
+        <!-- <li class="nav-item {{ (request()->is('admin/store/cancelledorders')) ? 'active' : '' }} {{ (request()->is('admin/completed_orders')) ? 'active' : '' }} {{ (request()->is('admin/pending_orders')) ? 'active' : '' }} {{ (request()->is('admin/cancelled_orders')) ? 'active' : '' }}">
             <a class="nav-link" data-toggle="collapse" href="#ord-dropdown" aria-expanded="false" aria-controls="setting-dropdown">
              <i class="material-icons">layers</i>
               <span class="menu-title">Orders<b class="caret"></b></span>
@@ -40,7 +47,7 @@
                 </li>
                 </ul>
                 </div>
-          </li>
+          </li> -->
         <li class="nav-item {{ (request()->is('category/list')) ? 'active' : '' }} {{ (request()->is('product/list')) ? 'active' : '' }} {{ (request()->is('deal/list')) ? 'active' : '' }} {{ (request()->is('top-cat')) ? 'active' : '' }}{{ (request()->is('bulk/upload')) ? 'active' : '' }}">
             <a class="nav-link" data-toggle="collapse" href="#cat-dropdown" aria-expanded="false" aria-controls="setting-dropdown">
              <i class="material-icons">content_paste</i>

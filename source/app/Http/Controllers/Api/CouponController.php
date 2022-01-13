@@ -31,6 +31,8 @@ class CouponController extends Controller
         $check2 = DB::table('orders')
             ->where('coupon_id', $coupon->coupon_id)
             ->where('user_id', $user_id)
+            ->where('payment_method','!=',NULL)
+            ->whereIn(['Pending','Confirmed','Accepted_By_Delivery_Agent','Out_For_Delivery','Completed'])
             ->count();
 
         if ($coupon->uses_restriction > $check2) {

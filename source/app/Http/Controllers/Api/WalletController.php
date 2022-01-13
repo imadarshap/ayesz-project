@@ -73,7 +73,6 @@ class WalletController extends Controller
         }
     }
 
-
     public function add_credit(Request $request)
     {
         if(empty($request->recharge_id)){

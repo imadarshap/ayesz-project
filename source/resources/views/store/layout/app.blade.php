@@ -75,6 +75,7 @@
   <script src="{{url('assets/js/plugins/bootstrap-notify.js')}}"></script>
   <script src="{{url('assets/js/material-dashboard.js?v=2.1.2')}}" type="text/javascript"></script>
   <script src="{{url('assets/demo/demo.js')}}"></script>
+  <script src="{{url('assets/js/plugins/jquery.multiselect.js')}}"></script>
   <script>
     $(document).ready(function() {
       $().ready(function() {

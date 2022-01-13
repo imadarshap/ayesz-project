@@ -2,21 +2,237 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\AdminLog;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use DB;
-use Session;
+use App\Order;
+use App\Traits\AssignOrder;
 use Carbon\Carbon;
 use App\Traits\SendMail;
 use App\Traits\SendSms;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class AdminorderController extends Controller
 {
     use SendMail;
     use SendSms;
+    use AssignOrder;
 
     public function allOrders(Request $request)
     {
+        $title = "Orders";
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        $logo = DB::table('tbl_web_setting')
+            ->where('set_id', '1')
+            ->first();
+        $currency = DB::table('currency')->first()->currency_sign;
+
+        return view('admin.all_orders.list', compact('title', 'logo', 'admin', 'currency', 'request'));
+    }
+
+    public function getOrders(Request $request)
+    {
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // Rows display per page
+
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+        $searchValue = $search_arr['value']; // Search value
+
+        // Total records
+        $totalRecords = DB::table('orders')->select('count(*) as allcount')->count();
+        $totalRecordswithFilter = DB::table('orders')->select('count(*) as allcount')
+            ->where('cart_id', 'like', '%' . $searchValue . '%')
+            ->count();
+
+        // Fetch records
+        $records = DB::table('orders')
+            ->where('orders.cart_id', 'like', '%' . $searchValue . '%')
+            ->leftjoin('users', 'users.user_id', 'orders.user_id')
+            ->leftJoin('store', 'store.store_id', 'orders.store_id')
+            ->leftJoin('delivery_boy', 'delivery_boy.dboy_id', 'orders.dboy_id')
+            ->where('payment_method', '!=', NULL)
+            ->orderBy('created_at','DESC')
+            ->select(
+                'orders.*',
+                'users.user_name',
+                'users.user_phone',
+                'store.store_name',
+                'store.phone_number as store_phone',
+                DB::raw("IFNULL(delivery_boy.boy_name,'') as boy_name"),
+                DB::raw("IFNULL(delivery_boy.boy_phone,'') as boy_phone")
+            )
+            ->skip($start)
+            ->take($rowperpage);
+
+        if(!empty($columnIndex_arr)){
+            $columnIndex = $columnIndex_arr[0]['column']; // Column index
+            $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+            $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+            $records = $records->orderBy($columnName, $columnSortOrder);
+        }
+
+        if (!empty($request->order_status)) {
+            $orderStatus = explode(',', $request->order_status);
+            $records = $records->whereIn('orders.order_status', $orderStatus);
+        }
+
+        $records = $records->get();
+
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $records
+        );
+
+        echo json_encode($response);
+        exit;
+    }
+
+    public function editOrder($id)
+    {
+        $order = DB::table('orders')->where('order_id', $id)->first();
+        if ($order) {
+            $title = "Edit Order";
+            $admin_email = Session::get('bamaAdmin');
+            $admin = DB::table('admin')
+                ->where('admin_email', $admin_email)
+                ->first();
+            $logo = DB::table('tbl_web_setting')
+                ->where('set_id', '1')
+                ->first();
+
+            $items = DB::table('store_orders')->where('order_cart_id', $order->cart_id)->get();
+            $store = DB::table('store')->where('store_id', $order->store_id)->first();
+            $user = DB::table('users')->where('user_id', $order->user_id)->first();
+            $address = DB::table('address')->where('address_id', $order->address_id)->first();
+
+            $dboys = DB::table('delivery_boy')->where('status', 1)->get();
+            $currency = DB::table('currency')->first()->currency_sign;
+            $logs = AdminLog::where('type','order')
+                    ->where('content_id',$order->order_id)
+                    ->join('admin','admin.id','admin_logs.admin_id')
+                    ->select('admin_logs.*','admin.admin_name','admin.admin_email')
+                    ->orderBy('created_at','DESC')->get();
+
+            return view('admin.all_orders.edit', compact('title', 'logo', 'admin', 'order', 'items', 'store', 'user', 'dboys', 'address', 'currency','logs'));
+        } else {
+            return redirect()->back()->withErrors("Order Not Found");
+        }
+    }
+
+    public function updateOrder(Request $request, $id)
+    {
+        $this->validate(
+            $request,
+            [
+                'delivery_charge' => 'required',
+                'order_status' => 'required'
+            ],
+            [
+                'delivery_charge' => 'Enter Delivery Charge',
+                'order_status' => 'Select Order Status'
+            ]
+        );
+
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+
+        $order = Order::where('order_id', $id)->first();
+        $success = array();
+        $errors = array();
+        if ($order) {
+            // return redirect()->back()->withErrors("Order Found");
+            if ($order->order_status != $request->order_status && !empty($request->order_status)) {
+                $log = new AdminLog();
+                $log->admin_id = $admin->id;
+                $log->type = 'order';
+                $log->content_id = $order->order_id;
+                $log->log = 'Order status changed from "' . $order->order_status . '" to "' . $request->order_status;
+                $log->save();
+
+                $order->order_status = $request->order_status;
+                $order->save();
+                $success[] = $log->log;
+            }
+            if ($order->delivery_charge != $request->delivery_charge && !empty($request->delivery_charge)) {
+                $log = new AdminLog();
+                $log->admin_id = $admin->id;
+                $log->type = 'order';
+                $log->content_id = $order->order_id;
+                $log->log = 'Delivery Charge changed from "' . $order->delivery_charge . '" to "' . $request->delivery_charge;
+                $log->save();
+
+                $order->delivery_charge = $request->delivery_charge;
+                $order->save();
+                $success[] = $log->log;
+            }
+            if ($order->dboy_id != $request->dboy_id && !empty($request->dboy_id)) {
+                $dboy = DB::table('delivery_boy')->where('dboy_id', $order->dboy_id)->first();
+                $new_dboy = DB::table('delivery_boy')->where('dboy_id', $request->dboy_id)->first();
+                if (!empty($new_dboy)) {
+                    if ($new_dboy->status != 0) {
+                        $log = new AdminLog();
+                        $log->admin_id = $admin->id;
+                        $log->type = 'order';
+                        $log->content_id = $order->order_id;
+                        $log->log = 'Delivery Agent changed from "#' . $dboy->id . '-' . $dboy->boy_name . ' (' . $dboy->boy_phone . ')" to "#' . $new_dboy->id . '-' . $new_dboy->boy_name . ' (' . $new_dboy->boy_phone . ')"';
+                        $log->save();
+
+                        $order->dboy_id = $request->dboy_id;
+                        $order->order_status = 'Confirmed';
+                        $order->save();
+                        $res = $this->assign($order->store_id, $order->cart_id, $order->dboy_id);
+                        if($res['status']=='1')
+                            $success[] = $res["message"];
+                        else
+                            $errors[] = $res["message"];
+                    } else {
+                        $errors[] = "Selected Delivery Agent is not on duty";
+                    }
+                }
+            }
+            $items = DB::table('store_orders')->where('order_cart_id', $order->cart_id)->get();
+            $item_total_price = $order->price_without_delivery;
+            foreach($items as $item){
+                if(!empty($request->get('item_price-'.$item->store_order_id))){
+                    $new_price = $request->get('item_price-'.$item->store_order_id);
+                    if($item->price != $request->get('item_price-'.$item->store_order_id)){
+                        $log = new AdminLog();
+                        $log->admin_id = $admin->id;
+                        $log->type = 'order';
+                        $log->content_id = $order->order_id;
+                        $log->log = 'Order Item "'.$item->qty.' X '.$item->product_name.'"'."'s".' price changed from "' . $item->price . '" to "' . $new_price;
+                        $log->save();
+
+                        $save = DB::table('store_orders')
+                                    ->where('store_order_id', $item->store_order_id)
+                                    ->update(['price'=>$new_price]);
+                        if($save){
+                            $item_total_price = $item_total_price - $item->price + $new_price;
+                        }
+                        $success[] = $log->log;
+                    }
+                }
+            }
+            $order->price_without_delivery = $item_total_price;
+            $order->total_price = $item_total_price + $order->delivery_charge;
+            $order->rem_price = $item_total_price + $order->delivery_charge - $order->discount - $order->paid_by_wallet;
+            $order->save();
+            return redirect()->back()->withSuccess($success)->withErrors($errors);
+        } else {
+            return redirect()->back()->withErrors("Order Not Found");
+        }
     }
 
     public function admin_com_orders(Request $request)
@@ -90,7 +306,7 @@ class AdminorderController extends Controller
             ->join('users', 'orders.user_id', '=', 'users.user_id')
             ->orderBy('orders.order_id', 'DESC')
             ->where('orders.order_status', 'Pending')
-            ->where('orders.payment_method', '!=',null)
+            ->where('orders.payment_method', '!=', null)
             //  ->orWhere('orders.order_status', 'Out_For_Delivery')
             //  ->orWhere('orders.order_status', 'Confirmed')
             //  ->orWhere('orders.order_status', 'Accepted_By_Delivery_Agent')
@@ -271,7 +487,7 @@ class AdminorderController extends Controller
         $ord = DB::table('orders')
             ->where('cart_id', $cart_id)
             ->first();
-        $total_price = $ord->rem_price;
+        $item_total_price = $ord->rem_price;
         $user = DB::table('users')
             ->where('user_id', $ord->user_id)
             ->first();
@@ -279,7 +495,7 @@ class AdminorderController extends Controller
         $wall = $user->wallet;
         $bywallet = $ord->paid_by_wallet;
         if ($ord->payment_method != 'COD' || $ord->payment_method != 'cod' || $ord->payment_method != 'Cod') {
-            $newwallet = $wall + $total_price + $bywallet;
+            $newwallet = $wall + $item_total_price + $bywallet;
             $update = DB::table('users')
                 ->where('user_id', $ord->user_id)
                 ->update(['wallet' => $newwallet]);

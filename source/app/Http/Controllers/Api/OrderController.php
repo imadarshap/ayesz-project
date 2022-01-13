@@ -348,6 +348,8 @@ class OrderController extends Controller
                     $check_uses = DB::table('orders')
                         ->where('coupon_id', $coupon->coupon_id)
                         ->where('user_id', $user_id)
+                        ->where('payment_method','!=',NULL)
+                        ->whereIn(['Pending','Confirmed','Accepted_By_Delivery_Agent','Out_For_Delivery','Completed'])
                         ->count();
 
                     if ($coupon->uses_restriction > $check_uses) {
@@ -473,7 +475,7 @@ class OrderController extends Controller
             if(empty($rp_order)){
                 return array('status'=>'0', 'message'=>'Invalid Payment');
             }
-            // return array('status'=>'0', 'message'=>'Payment is failed','data'=>$rp_order->items[0]->amount);
+            $payment_method = $rp_order->items[0]->method;
             $payble_price = $orderr->total_price-$orderr->coupon_discount;
             if($wallet=='yes'){
                 if($user_data->wallet > 0 && $user_data->wallet<$payble_price){

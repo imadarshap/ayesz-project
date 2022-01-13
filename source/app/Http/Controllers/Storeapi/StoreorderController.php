@@ -291,6 +291,11 @@ class StoreorderController extends Controller
         $order = DB::table('orders')
             ->where('cart_id', $cart_id)
             ->first();
+        if($order->order_status != 'Pending'){
+            $data[] = array('status'=>0,'result' => 'Order already in process');
+            return $data;
+        }
+        
         $var = DB::table('store_orders')
             ->where('order_cart_id', $cart_id)
             ->where('store_approval', 1)
@@ -350,128 +355,7 @@ class StoreorderController extends Controller
             $prod_name = implode(',', $p_name);
         }
 
-        /*if($order->cancel_by_store==0){
-            $cancel=1;
-          $store_id = DB::table('store')
-              ->select("store_id","store_name"
-            ,DB::raw("6371 * acos(cos(radians(".$store->lat . ")) 
-            * cos(radians(lat)) 
-            * cos(radians(lng) - radians(" . $store->lng . ")) 
-            + sin(radians(" .$store->lat. ")) 
-            * sin(radians(lat))) AS distance"))
-           ->where('city',$store->city) 
-           ->where('store_id','!=',$store->store_id)
-           ->orderBy('distance')
-           ->first();
-            if($store_id){
-            $ordupdate = DB::table('orders')
-                     ->where('cart_id', $cart_id)
-                     ->update(['store_id'=>$store_id->store_id,
-                     'cancel_by_store'=>$cancel]);
-             $carte= DB::table('store_orders')
-            ->where('order_cart_id', $cart_id)
-            ->where('store_approval',0)
-            ->get();
-            $cart_update= DB::table('store_orders')
-            ->where('order_cart_id', $cart_id)
-            ->update(['store_approval'=>1]);
-            
-              ///////send notification to store//////
-              
-                $notification_title = "WooHoo ! You Got a New Order";
-                $notification_text = "you got an order cart id #".$cart_id." contains of " .$prod_name." of price ".$curr->currency_sign." ".$price2. ". It will have to delivered on ".$order->delivery_date." between ".$order->time_slot.".";
-                
-                $date = date('d-m-Y');
-                $getUser = DB::table('store')
-                                ->get();
-        
-                $getDevice = DB::table('store')
-                         ->where('store_id', $store_id->store_id)
-                        ->select('device_id')
-                        ->first();
-                $created_at = Carbon::now();
-        
-                
-                $getFcm = DB::table('fcm')
-                            ->where('id', '1')
-                            ->first();
-                            
-                $getFcmKey = $getFcm->store_server_key;
-                $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
-                $token = $getDevice->device_id;
-                    
-        
-                    $notification = [
-                        'title' => $notification_title,
-                        'body' => $notification_text,
-                        'sound' => true,
-                    ];
-                    
-                    $extraNotificationData = ["message" => $notification];
-        
-                    $fcmNotification = [
-                        'to'        => $token,
-                        'notification' => $notification,
-                        'data' => $extraNotificationData,
-                    ];
-        
-                    $headers = [
-                        'Authorization: key='.$getFcmKey,
-                        'Content-Type: application/json'
-                    ];
-        
-                    $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_URL,$fcmUrl);
-                    curl_setopt($ch, CURLOPT_POST, true);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmNotification));
-                    $result = curl_exec($ch);
-                    curl_close($ch);
-                    
-                     ///////send notification to store//////
-             
-                $dd = DB::table('store_notification')
-                    ->insert(['store_id'=>$store_id->store_id,
-                     'not_title'=>$notification_title,
-                     'not_message'=>$notification_text]);
-                    
-                $results = json_decode($result);
-            $data[]=array('result'=>'Order Rejected successfully');
-            }
-            else{
-            $ordupdate = DB::table('orders')
-                     ->where('cart_id', $cart_id)
-                     ->update(['store_id'=>0,
-                     'cancel_by_store'=>$cancel]);
-            
-             $carte= DB::table('store_orders')
-            ->where('order_cart_id', $cart_id)
-            ->where('store_approval',0)
-            ->get();
-            $cart_update= DB::table('store_orders')
-            ->where('order_cart_id', $cart_id)
-            ->update(['store_approval'=>1]); 
-            $data[]=array('result'=>'Order Rejected successfully');
-            }
-        }
-        else{
-            $cancel=2;
-             $ordupdate = DB::table('orders')
-                     ->where('cart_id', $cart_id)
-                     ->update(['store_id'=>0,
-                     'cancel_by_store'=>$cancel]);
-            
-             $carte= DB::table('store_orders')
-            ->where('order_cart_id', $cart_id)
-            ->where('store_approval',0)
-            ->get();
-            $cart_update= DB::table('store_orders')
-            ->where('order_cart_id', $cart_id)
-            ->update(['store_approval'=>1]);
-        $data[]=array('result'=>'Order Rejected successfully');
-        }    */
+    
         $cancel = 2;
         $ordupdate = DB::table('orders')
             ->where('cart_id', $cart_id)
@@ -485,7 +369,7 @@ class StoreorderController extends Controller
             ->where('user_id', $order->user_id)
             ->first();
         $orderplacedmsg = $this->orderreject($order->cart_id, $prod_name, $price2, $user->user_phone, 'Vendor');
-        $data[] = array('result' => 'Order Rejected successfully');
+        $data[] = array('status'=>1,'result' => 'Order Rejected successfully');
         return $data;
     }
 }
