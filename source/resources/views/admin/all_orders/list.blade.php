@@ -160,9 +160,6 @@
                         return '<div class="text-right">'
                             +'<a href="' + "{{url('admin/orders/edit')}}/" + order_id + '" rel="tooltip" class="btn btn-success btn-sm">' +
                             '<i class="material-icons">edit</i>' +
-                            '</a>' +
-                            '<a href="' + "{{url('admin/orders/show')}}/" + order_id + '" rel="tooltip" class="btn btn-primary btn-sm">' +
-                            '<i class="material-icons">layers</i>' +
                             '</a></div>';
                     }
                 }
