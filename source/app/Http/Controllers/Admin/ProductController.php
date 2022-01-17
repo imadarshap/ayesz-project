@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helper\Helper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Product;
@@ -18,6 +19,9 @@ class ProductController extends Controller
         $admin = DB::table('admin')
             ->where('admin_email', $admin_email)
             ->first();
+        if(!Helper::hasRight($admin->id,'products','View')){
+            return abort(403);
+        }
         $logo = DB::table('tbl_web_setting')
             ->where('set_id', '1')
             ->first();
@@ -31,6 +35,13 @@ class ProductController extends Controller
 
     public function getList(Request $request)
     {
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if(!Helper::hasRight($admin->id,'products','View')){
+            return abort(403);
+        }
         $draw = $request->get('draw');
         $start = $request->get("start");
         $rowperpage = $request->get("length"); // Rows display per page
@@ -48,14 +59,14 @@ class ProductController extends Controller
         // Total records
         $totalRecords = DB::table('product')->select('count(*) as allcount')->count();
         $totalRecordswithFilter = DB::table('product')->select('count(*) as allcount')
-                ->where('product_name', 'like', '%' . $searchValue . '%')
-                ->count();
+            ->where('product_name', 'like', '%' . $searchValue . '%')
+            ->count();
 
         // Fetch records
         $records = DB::table('product')->orderBy($columnName, $columnSortOrder)
             ->where('product.product_name', 'like', '%' . $searchValue . '%')
-            ->join('categories','categories.cat_id','product.cat_id')
-            ->select('product.*','categories.title as cat_name')
+            ->join('categories', 'categories.cat_id', 'product.cat_id')
+            ->select('product.*', 'categories.title as cat_name')
             ->skip($start)
             ->take($rowperpage)
             ->get();
@@ -69,7 +80,7 @@ class ProductController extends Controller
                 "product_name" => $record->product_name,
                 "cat_name" => $record->cat_name,
                 "product_image" => $record->product_image,
-                "hide"=>$record->hide
+                "hide" => $record->hide
             );
         }
 
@@ -92,6 +103,9 @@ class ProductController extends Controller
         $admin = DB::table('admin')
             ->where('admin_email', $admin_email)
             ->first();
+        if(!Helper::hasRight($admin->id,'products','Add')){
+            return abort(403);
+        }
         $logo = DB::table('tbl_web_setting')
             ->where('set_id', '1')
             ->first();
@@ -153,6 +167,13 @@ class ProductController extends Controller
 
     public function AddNewProduct(Request $request)
     {
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if(!Helper::hasRight($admin->id,'products','Add')){
+            return abort(403);
+        }
         $category_id = $request->cat_id;
         $product_name = $request->product_name;
         $quantity = $request->quantity;
@@ -252,6 +273,9 @@ class ProductController extends Controller
         $admin = DB::table('admin')
             ->where('admin_email', $admin_email)
             ->first();
+        if(!Helper::hasRight($admin->id,'products','Edit')){
+            return abort(403);
+        }
         $logo = DB::table('tbl_web_setting')
             ->where('set_id', '1')
             ->first();
@@ -321,6 +345,13 @@ class ProductController extends Controller
 
     public function UpdateProduct(Request $request)
     {
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if(!Helper::hasRight($admin->id,'products','Edit')){
+            return abort(403);
+        }
         $category_id = $request->cat_id;
         $product_id = $request->product_id;
         $product_name = $request->product_name;
@@ -437,8 +468,13 @@ class ProductController extends Controller
 
     public function DeleteProduct(Request $request)
     {
-        $product_id = $request->product_id;
-
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if(!Helper::hasRight($admin->id,'products','Delete')){
+            return abort(403);
+        }
         $delete = DB::table('product')->where('product_id', $request->product_id)->delete();
         if ($delete) {
             $delete = DB::table('product_varient')->where('product_id', $request->product_id)->delete();

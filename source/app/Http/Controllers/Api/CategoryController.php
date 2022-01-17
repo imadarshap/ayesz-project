@@ -3,10 +3,11 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use DB;
 use Carbon\Carbon;
 use DateTime;
 use App\Helper\Helper;
+use App\OrderRating;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -594,39 +595,22 @@ class CategoryController extends Controller
         $store_id = $request->store_id;
     	$cat_id = $request->cat_id;
 
-        	$products = DB::table('store_products')->join('product_varient', 'store_products.varient_id', '=', 'product_varient.varient_id')
+        	$products = DB::table('store_products')
+                ->join('product_varient', 'store_products.varient_id', '=', 'product_varient.varient_id')
                 ->join('product', 'product_varient.product_id', '=', 'product.product_id')
                 ->join('store','store.store_id','store_products.store_id')
-                ->where('product.cat_id', $cat_id)->where('store_products.store_id', $store_id)
+                ->where('product.cat_id', $cat_id)
+                ->where('store_products.store_id', $store_id)
                 ->where('store_products.price', '!=', NULL)
                 ->where('product.hide', 0)
             	->orderByRaw('store_products.stock=0,product.product_name')
+                ->select('store_products.*','store.availability','product.product_name','product.product_image',
+                'product_varient.unit','product_varient.quantity','product_varient.varient_image','product.product_id',
+                'product_varient.description','product.cat_id')
                 ->get();
 
             if (count($products) > 0)
             {
-                /*$result = array();
-                $i = 0;
-
-                foreach ($prod as $prods)
-                {
-                    array_push($result, $prods);
-
-                    $app = json_decode($prods->product_id);
-                    $apps = array(
-                        $app
-                    );
-                    $app = DB::table('store_products')->join('product_varient', 'store_products.varient_id', '=', 'product_varient.varient_id')
-                        ->Leftjoin('deal_product', 'product_varient.varient_id', '=', 'deal_product.varient_id')
-                        ->select('store_products.store_id', 'store_products.stock', 'product_varient.varient_id', 'product_varient.description', 'store_products.price', 'store_products.mrp', 'product_varient.varient_image', 'product_varient.unit', 'product_varient.quantity', 'deal_product.deal_price', 'deal_product.valid_from', 'deal_product.valid_to')
-                        ->where('store_products.store_id', $store_id)
-                        ->whereIn('product_varient.product_id', $apps)->where('store_products.price', '!=', NULL)
-                        ->get();
-
-                    $result[$i]->varients = $app;
-                    $i++;
-
-                }*/
                 
                 $products_arr = array();
                 foreach($products as $product){
@@ -664,6 +648,13 @@ class CategoryController extends Controller
                     }else{
                         $product['available'] = 0;
                     }
+                    $rating = OrderRating::where('product_id',$product['varient_id'])
+                                ->join('orders','orders.order_id','order_ratings.order_id')
+                                ->where('store_id',$product['store_id'])
+                                ->select(DB::raw("IFNULL(sum(order_ratings.rating)/count(order_ratings.rating),0) as rating"))
+                                ->first();
+                    
+                    $product['rating'] = $rating->rating;
                     array_push($products_arr,$product);
                 }
 

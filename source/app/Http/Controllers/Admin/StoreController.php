@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helper\Helper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
@@ -11,50 +12,58 @@ class StoreController extends Controller
 {
     public function storeclist(Request $request)
     {
-         $title = "Home";
-         $admin_email=Session::get('bamaAdmin');
-    	 $admin= DB::table('admin')
-    	 		   ->where('admin_email',$admin_email)
-    	 		   ->first();
-    	  $logo = DB::table('tbl_web_setting')
-                ->where('set_id', '1')
-                ->first();
-        
+        $title = "Home";
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if(!Helper::hasRight($admin->id,'vendors','View')){
+            return abort(403);
+        }
+        $logo = DB::table('tbl_web_setting')
+            ->where('set_id', '1')
+            ->first();
+
         $city = DB::table('store')
-                ->get();
-                
-        return view('admin.store.storeclist', compact('title','city','admin','logo'));    
-        
-        
+            ->get();
+
+        return view('admin.store.storeclist', compact('title', 'city', 'admin', 'logo'));
     }
     public function store(Request $request)
     {
         $title = "Home";
-         $admin_email=Session::get('bamaAdmin');
-    	 $admin= DB::table('admin')
-    	 		   ->where('admin_email',$admin_email)
-    	 		   ->first();
-    	  $logo = DB::table('tbl_web_setting')
-                ->where('set_id', '1')
-                ->first();
-        
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if(!Helper::hasRight($admin->id,'vendors','Add')){
+            return abort(403);
+        }
+        $logo = DB::table('tbl_web_setting')
+            ->where('set_id', '1')
+            ->first();
+
         $city = DB::table('city')
-                ->get();
+            ->get();
         $map1 = DB::table('map_api')
-             ->first();
-         $map = $map1->map_api_key;     
-         $mapset = DB::table('map_settings')
-                ->first();
+            ->first();
+        $map = $map1->map_api_key;
+        $mapset = DB::table('map_settings')
+            ->first();
         $mapbox = DB::table('mapbox')
-                ->first();
-        return view('admin.store.storeadd', compact('title','city','admin','logo','map','mapset','mapbox'));    
-        
-        
+            ->first();
+        return view('admin.store.storeadd', compact('title', 'city', 'admin', 'logo', 'map', 'mapset', 'mapbox'));
     }
     public function storeadd(Request $request)
     {
         $title = "Home";
-        
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if(!Helper::hasRight($admin->id,'vendors','Add')){
+            return abort(403);
+        }
         $store_name = $request->store_name;
         $emp_name = $request->emp_name;
         $number = $request->number;
@@ -64,136 +73,142 @@ class StoreController extends Controller
         $password = $request->password;
         $password = $request->password;
         $address = $request->address;
-        $share =$request->share;
-        $discount = str_replace("%",'', $share);
+        $share = $request->share;
+        $discount = str_replace("%", '', $share);
         $addres = str_replace(" ", "+", $address);
         $address1 = str_replace("-", "+", $addres);
         $checkmap = DB::table('map_api')
-                  ->first();
-         $mapset= DB::table('map_settings')
-                ->first();
-                
-        $chkstorphon = DB::table('store')
-                      ->where('phone_number', $number)
-                      ->first(); 
-         $chkstoremail = DB::table('store')
-                      ->where('email', $email)
-                      ->first();              
-        
-         if($chkstorphon && $chkstoremail){
-             return redirect()->back()->withErrors('This Phone Number and Email Are Already Registered With Another Store');
-        } 
+            ->first();
+        $mapset = DB::table('map_settings')
+            ->first();
 
-        if($chkstorphon){
-             return redirect()->back()->withErrors('This Phone Number is Already Registered With Another Store');
-        } 
-        if($chkstoremail){
-             return redirect()->back()->withErrors('This Email is Already Registered With Another Store');
-        } 
-          
-        if($mapset->mapbox == 0 && $mapset->google_map == 1){        
-        $response = json_decode(file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?address=".$address1."&key=".$checkmap->map_api_key));
-        
-         $lat = $response->results[0]->geometry->location->lat;
-         $lng = $response->results[0]->geometry->location->lng;
+        $chkstorphon = DB::table('store')
+            ->where('phone_number', $number)
+            ->first();
+        $chkstoremail = DB::table('store')
+            ->where('email', $email)
+            ->first();
+
+        if ($chkstorphon && $chkstoremail) {
+            return redirect()->back()->withErrors('This Phone Number and Email Are Already Registered With Another Store');
         }
-        else{
-           $lat = $request->lat;
-           $lng = $request->lng;  
+
+        if ($chkstorphon) {
+            return redirect()->back()->withErrors('This Phone Number is Already Registered With Another Store');
         }
-    	$lat = $request->lat;
+        if ($chkstoremail) {
+            return redirect()->back()->withErrors('This Email is Already Registered With Another Store');
+        }
+
+        if ($mapset->mapbox == 0 && $mapset->google_map == 1) {
+            $response = json_decode(file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?address=" . $address1 . "&key=" . $checkmap->map_api_key));
+
+            $lat = $response->results[0]->geometry->location->lat;
+            $lng = $response->results[0]->geometry->location->lng;
+        } else {
+            $lat = $request->lat;
+            $lng = $request->lng;
+        }
+        $lat = $request->lat;
         $lng = $request->lng;
-       
-        
+
+
         $this->validate(
             $request,
-                [
-                    
-                    'store_name'=>'required',
-                    'emp_name'=>'required',
-                    'number'=>'required',
-                    'range'=>'required',
-                    'address'=>'required',
-                    'email'=>'required',
-                    'password'=>'required',
-                	'lat'=>'required'
-                ],
-                [
-                    
-                    'store_name.required'=>'Store Name Required',
-                    'emp_name.required'=>'Employee Name Required',
-                    'number.required'=>'Phone Number Required',
-                    'range.required'=>'Enter delivery range',
-                    'address.required'=>'Enter store address',
-                    'email.required'=>'E-mail Address Required',
-                    'password.required'=>'Password Required',
-					'lat.required'=>'Please select address from search list',
-                ]
-        );
-        
-        
-    
-        
-    	$insert = DB::table('store')
-                    ->insertgetid([
-                        'store_name'=>$store_name,
-                        'employee_name'=>$emp_name,
-                        'phone_number'=>$number,
-                        'city'=>$city,
-                        'email'=>$email,
-                        'del_range'=> $range,
-                        'password'=>$password,
-                        'address'=>$address,
-                        'lat'=>$lat,
-                        'lng'=>$lng,
-                        'admin_share'=>$share,
-                        ]);
-                        
-      if($insert){
-        return redirect()->back()->withSuccess('Added Successfully');
-      }else{
-         return redirect()->back()->withErrors('Something Wents Wrong'); 
-      }
+            [
 
+                'store_name' => 'required',
+                'emp_name' => 'required',
+                'number' => 'required',
+                'range' => 'required',
+                'address' => 'required',
+                'email' => 'required',
+                'password' => 'required',
+                'lat' => 'required'
+            ],
+            [
+
+                'store_name.required' => 'Store Name Required',
+                'emp_name.required' => 'Employee Name Required',
+                'number.required' => 'Phone Number Required',
+                'range.required' => 'Enter delivery range',
+                'address.required' => 'Enter store address',
+                'email.required' => 'E-mail Address Required',
+                'password.required' => 'Password Required',
+                'lat.required' => 'Please select address from search list',
+            ]
+        );
+
+
+
+
+        $insert = DB::table('store')
+            ->insertgetid([
+                'store_name' => $store_name,
+                'employee_name' => $emp_name,
+                'phone_number' => $number,
+                'city' => $city,
+                'email' => $email,
+                'del_range' => $range,
+                'password' => $password,
+                'address' => $address,
+                'lat' => $lat,
+                'lng' => $lng,
+                'admin_share' => $share,
+            ]);
+
+        if ($insert) {
+            return redirect()->back()->withSuccess('Added Successfully');
+        } else {
+            return redirect()->back()->withErrors('Something Wents Wrong');
+        }
     }
-    
+
     public function storedit(Request $request)
     {
-         $title = "Edit Store";
-         $admin_email=Session::get('bamaAdmin');
-    	 $admin= DB::table('admin')
-    	 		   ->where('admin_email',$admin_email)
-    	 		   ->first();
-    	  $logo = DB::table('tbl_web_setting')
-                ->where('set_id', '1')
-                ->first();
-        
+        $title = "Edit Store";
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if(!Helper::hasRight($admin->id,'vendors','Edit')){
+            return abort(403);
+        }
+        $logo = DB::table('tbl_web_setting')
+            ->where('set_id', '1')
+            ->first();
+
         $store_id = $request->store_id;
-        
+
         $city = DB::table('city')
-                    ->get();
-                    
-              
-       $map1 = DB::table('map_api')
-             ->first();
-         $map = $map1->map_api_key;   
+            ->get();
+
+
+        $map1 = DB::table('map_api')
+            ->first();
+        $map = $map1->map_api_key;
         $store = DB::table('store')
-                ->where('store_id',$store_id)
-                ->first();
-         $mapset = DB::table('map_settings')
-                ->first();
+            ->where('store_id', $store_id)
+            ->first();
+        $mapset = DB::table('map_settings')
+            ->first();
         $mapbox = DB::table('mapbox')
-                ->first();
-        return view('admin.store.storeedit', compact('title','city','store','admin','logo','map','mapset','mapbox'));    
-        
-        
+            ->first();
+        return view('admin.store.storeedit', compact('title', 'city', 'store', 'admin', 'logo', 'map', 'mapset', 'mapbox'));
     }
-    
+
     public function storeupdate(Request $request)
     {
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if(!Helper::hasRight($admin->id,'vendors','Edit')){
+            return abort(403);
+        }
         $title = "Update store";
         $store_id = $request->store_id;
-        $share =$request->share;
+        $share = $request->share;
         $store_name = $request->store_name;
         $emp_name = $request->emp_name;
         $number = $request->number;
@@ -204,102 +219,103 @@ class StoreController extends Controller
         $address = $request->address;
         $addres = str_replace(" ", "+", $address);
         $address1 = str_replace("-", "+", $addres);
-         $checkmap = DB::table('map_api')
-                  ->first();
-         $mapset= DB::table('map_settings')
-                ->first();
-         $chkstorphon = DB::table('store')
-                      ->where('phone_number', $number)
-                      ->where('store_id', '!=', $store_id)
-                      ->first(); 
-         $chkstoremail = DB::table('store')
-                      ->where('email', $email)
-                      ->where('store_id', '!=', $store_id)
-                      ->first();              
-        
-         
-         if($chkstorphon && $chkstoremail){
-             return redirect()->back()->withErrors('This Phone Number and Email Are Already Registered With Another Store');
-        } 
+        $checkmap = DB::table('map_api')
+            ->first();
+        $mapset = DB::table('map_settings')
+            ->first();
+        $chkstorphon = DB::table('store')
+            ->where('phone_number', $number)
+            ->where('store_id', '!=', $store_id)
+            ->first();
+        $chkstoremail = DB::table('store')
+            ->where('email', $email)
+            ->where('store_id', '!=', $store_id)
+            ->first();
 
-        if($chkstorphon){
-             return redirect()->back()->withErrors('This Phone Number is Already Registered With Another Store');
-        } 
-        if($chkstoremail){
-             return redirect()->back()->withErrors('This Email is Already Registered With Another Store');
-        } 
-        
-        if($mapset->mapbox == 0 && $mapset->google_map == 1){ 
-        $response = json_decode(file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?address=".$address1."&key=".$checkmap->map_api_key));
-        
-         $lat = $response->results[0]->geometry->location->lat;
-         $lng = $response->results[0]->geometry->location->lng;
+
+        if ($chkstorphon && $chkstoremail) {
+            return redirect()->back()->withErrors('This Phone Number and Email Are Already Registered With Another Store');
         }
-        else{
+
+        if ($chkstorphon) {
+            return redirect()->back()->withErrors('This Phone Number is Already Registered With Another Store');
+        }
+        if ($chkstoremail) {
+            return redirect()->back()->withErrors('This Email is Already Registered With Another Store');
+        }
+
+        if ($mapset->mapbox == 0 && $mapset->google_map == 1) {
+            $response = json_decode(file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?address=" . $address1 . "&key=" . $checkmap->map_api_key));
+
+            $lat = $response->results[0]->geometry->location->lat;
+            $lng = $response->results[0]->geometry->location->lng;
+        } else {
             $lat = $request->lat;
             $lng = $request->lng;
         }
         $this->validate(
             $request,
-                [
-                    
-                    'store_name'=>'required',
-                    'emp_name'=>'required',
-                    'number'=>'required',
-                    'email'=>'required',
-                    'password'=>'required',
-                    'range'=>'required',
-                    'address'=>'required',
-                    'share'=>'required'
-                ],
-                [
-                    
-                    'store_name.required'=>'Store Name Required',
-                    'emp_name.required'=>'Employee Name Required',
-                    'number.required'=>'Phone Number Required',
-                    'range.required'=>'Enter delivery range',
-                    'address.required'=>'Enter store address',
-                    'email.required'=>'E-mail Address Required',
-                    'password.required'=>'Password Required',
-                    'share.required'=>'Admin Share Required'
+            [
 
-                ]
+                'store_name' => 'required',
+                'emp_name' => 'required',
+                'number' => 'required',
+                'email' => 'required',
+                'password' => 'required',
+                'range' => 'required',
+                'address' => 'required',
+                'share' => 'required'
+            ],
+            [
+
+                'store_name.required' => 'Store Name Required',
+                'emp_name.required' => 'Employee Name Required',
+                'number.required' => 'Phone Number Required',
+                'range.required' => 'Enter delivery range',
+                'address.required' => 'Enter store address',
+                'email.required' => 'E-mail Address Required',
+                'password.required' => 'Password Required',
+                'share.required' => 'Admin Share Required'
+
+            ]
         );
-        
-    	 $insert = DB::table('store')
-    	            ->where('store_id',$store_id)
-                    ->update([
-                        'store_name'=>$store_name,
-                        'employee_name'=>$emp_name,
-                        'phone_number'=>$number,
-                        'city'=>$city,
-                        'email'=>$email,
-                        'del_range'=>$range,
-                        'password'=>$password,
-                        'address'=>$address,
-                        'lat'=>$lat,
-                        'lng'=>$lng,
-                        'admin_share'=>$share,
-                        ]);
-     
-     return redirect()->back()->withSuccess('Updated Successfully');
+
+        $insert = DB::table('store')
+            ->where('store_id', $store_id)
+            ->update([
+                'store_name' => $store_name,
+                'employee_name' => $emp_name,
+                'phone_number' => $number,
+                'city' => $city,
+                'email' => $email,
+                'del_range' => $range,
+                'password' => $password,
+                'address' => $address,
+                'lat' => $lat,
+                'lng' => $lng,
+                'admin_share' => $share,
+            ]);
+
+        return redirect()->back()->withSuccess('Updated Successfully');
     }
-    
+
     public function storedelete(Request $request)
     {
-        
-                    $store_id=$request->store_id;
-            
-                	$delete=DB::table('store')->where('store_id',$store_id)->delete();
-                    if($delete)
-                    {
-                    DB::table('store_products')->where('store_id',$store_id)->delete();
-                    return redirect()->back()->withSuccess('Deleted Successfully');
-            
-                    }
-                    else
-                    {
-                       return redirect()->back()->withErrors('Something Wents Wrong'); 
-                    }
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if(!Helper::hasRight($admin->id,'vendors','Delete')){
+            return abort(403);
+        }
+        $store_id = $request->store_id;
+
+        $delete = DB::table('store')->where('store_id', $store_id)->delete();
+        if ($delete) {
+            DB::table('store_products')->where('store_id', $store_id)->delete();
+            return redirect()->back()->withSuccess('Deleted Successfully');
+        } else {
+            return redirect()->back()->withErrors('Something Wents Wrong');
+        }
     }
 }

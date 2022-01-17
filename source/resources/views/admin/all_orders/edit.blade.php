@@ -209,8 +209,8 @@
       search: true,
       selectAll: true,
       texts: {
-        placeholder: 'Select Vendors',
-        search: 'Search Vendors'
+        placeholder: 'Select Order Status',
+        search: 'Search Order Status'
       }
     });
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DeliveryRating;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
@@ -10,6 +11,7 @@ use App\Traits\SendMail;
 use App\Traits\SendSms;
 use DateTime;
 use App\Helper\Helper;
+use App\OrderRating;
 use App\WalletHistory;
 use Razorpay\Api\Api;
 
@@ -1295,7 +1297,6 @@ class OrderController extends Controller
         }
     }
 
-
     public function completed_orders(Request $request)
     {
         $user_id = $request->user_id;
@@ -1314,8 +1315,26 @@ class OrderController extends Controller
                     ->orderBy('store_orders.order_date', 'DESC')
                     ->get();
 
+                $rating = OrderRating::where('order_id',$completed->order_id)->count();
+                // $deliveryRating = DeliveryRating::where('order_id',$completeds)->get();
 
-                $data[] = array('order_status' => $completed->order_status, 'delivery_date' => $completed->delivery_date, 'time_slot' => $completed->time_slot, 'payment_method' => $completed->payment_method, 'payment_status' => $completed->payment_status, 'paid_by_wallet' => $completed->paid_by_wallet, 'cart_id' => $completed->cart_id, 'price' => $completed->total_price, 'del_charge' => $completed->delivery_charge, 'remaining_amount' => $completed->rem_price, 'coupon_discount' => $completed->coupon_discount, 'dboy_name' => $completed->boy_name, 'dboy_phone' => $completed->boy_phone, 'data' => $order);
+
+                $data[] = array(
+                    'order_status' => $completed->order_status, 
+                    'delivery_date' => $completed->delivery_date, 
+                    'time_slot' => $completed->time_slot, 
+                    'payment_method' => $completed->payment_method, 
+                    'payment_status' => $completed->payment_status, 
+                    'paid_by_wallet' => $completed->paid_by_wallet, 
+                    'cart_id' => $completed->cart_id, 
+                    'price' => $completed->total_price, 
+                    'del_charge' => $completed->delivery_charge, 
+                    'remaining_amount' => $completed->rem_price, 
+                    'coupon_discount' => $completed->coupon_discount, 
+                    'dboy_name' => $completed->boy_name, 
+                    'dboy_phone' => $completed->boy_phone, 
+                    'data' => $order,
+                    'rating'=>$rating);
             }
         } else {
             $data = array('data' => []);

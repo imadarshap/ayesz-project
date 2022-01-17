@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\AdminLog;
+use App\Helper\Helper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Order;
@@ -26,6 +27,9 @@ class AdminorderController extends Controller
         $admin = DB::table('admin')
             ->where('admin_email', $admin_email)
             ->first();
+        if(!Helper::hasRight($admin->id,'orders','View')){
+            return abort(403);
+        }
         $logo = DB::table('tbl_web_setting')
             ->where('set_id', '1')
             ->first();
@@ -36,6 +40,13 @@ class AdminorderController extends Controller
 
     public function getOrders(Request $request)
     {
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if(!Helper::hasRight($admin->id,'orders','View')){
+            return abort(403);
+        }
         $draw = $request->get('draw');
         $start = $request->get("start");
         $rowperpage = $request->get("length"); // Rows display per page
@@ -106,6 +117,9 @@ class AdminorderController extends Controller
             $admin = DB::table('admin')
                 ->where('admin_email', $admin_email)
                 ->first();
+            if(!Helper::hasRight($admin->id,'orders','Edit')){
+                return abort(403);
+            }
             $logo = DB::table('tbl_web_setting')
                 ->where('set_id', '1')
                 ->first();
@@ -147,6 +161,9 @@ class AdminorderController extends Controller
         $admin = DB::table('admin')
             ->where('admin_email', $admin_email)
             ->first();
+        if(!Helper::hasRight($admin->id,'orders','Edit')){
+            return abort(403);
+        }
 
         $order = Order::where('order_id', $id)->first();
         $success = array();
@@ -247,6 +264,9 @@ class AdminorderController extends Controller
         $admin = DB::table('admin')
             ->where('admin_email', $admin_email)
             ->first();
+        if(!Helper::hasRight($admin->id,'orders','View')){
+            return abort(403);
+        }
         $logo = DB::table('tbl_web_setting')
             ->where('set_id', '1')
             ->first();
@@ -275,6 +295,9 @@ class AdminorderController extends Controller
         $admin = DB::table('admin')
             ->where('admin_email', $admin_email)
             ->first();
+        if(!Helper::hasRight($admin->id,'orders','View')){
+            return abort(403);
+        }
         $logo = DB::table('tbl_web_setting')
             ->where('set_id', '1')
             ->first();
@@ -303,6 +326,9 @@ class AdminorderController extends Controller
         $admin = DB::table('admin')
             ->where('admin_email', $admin_email)
             ->first();
+        if(!Helper::hasRight($admin->id,'orders','View')){
+            return abort(403);
+        }
         $logo = DB::table('tbl_web_setting')
             ->where('set_id', '1')
             ->first();
@@ -333,10 +359,13 @@ class AdminorderController extends Controller
         $store = DB::table('store')
             ->where('store_id', $id)
             ->first();
-        $admin_email = Session::get('bamaAdmin');
-        $admin = DB::table('admin')
-            ->where('admin_email', $admin_email)
-            ->first();
+            $admin_email = Session::get('bamaAdmin');
+            $admin = DB::table('admin')
+                ->where('admin_email', $admin_email)
+                ->first();
+            if(!Helper::hasRight($admin->id,'orders','View')){
+                return abort(403);
+            }
         $logo = DB::table('tbl_web_setting')
             ->where('set_id', '1')
             ->first();
@@ -357,8 +386,6 @@ class AdminorderController extends Controller
         return view('admin.store.orders', compact('title', 'logo', 'ord', 'store', 'details', 'admin'));
     }
 
-
-
     public function admin_dboy_orders(Request $request)
     {
         $title = "Delivery Boy Order section";
@@ -370,6 +397,9 @@ class AdminorderController extends Controller
         $admin = DB::table('admin')
             ->where('admin_email', $admin_email)
             ->first();
+        if(!Helper::hasRight($admin->id,'orders','View')){
+            return abort(403);
+        }
         $logo = DB::table('tbl_web_setting')
             ->where('set_id', '1')
             ->first();
@@ -415,6 +445,9 @@ class AdminorderController extends Controller
         $admin = DB::table('admin')
             ->where('admin_email', $admin_email)
             ->first();
+        if(!Helper::hasRight($admin->id,'orders','View')){
+            return abort(403);
+        }
         $logo = DB::table('tbl_web_setting')
             ->where('set_id', '1')
             ->first();
@@ -453,6 +486,9 @@ class AdminorderController extends Controller
         $admin = DB::table('admin')
             ->where('admin_email', $admin_email)
             ->first();
+        if(!Helper::hasRight($admin->id,'orders','Edit')){
+            return abort(403);
+        }
         $logo = DB::table('tbl_web_setting')
             ->where('set_id', '1')
             ->first();
@@ -467,6 +503,13 @@ class AdminorderController extends Controller
 
     public function assigndboy(Request $request)
     {
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if(!Helper::hasRight($admin->id,'orders','Edit')){
+            return abort(403);
+        }
         $cart_id = $request->id;
         $d_boy = $request->d_boy;
         $admin_email = Session::get('bamaAdmin');
@@ -488,6 +531,13 @@ class AdminorderController extends Controller
 
     public function rejectorder(Request $request)
     {
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if(!Helper::hasRight($admin->id,'orders','Edit')){
+            return abort(403);
+        }
         $cart_id = $request->id;
         $ord = DB::table('orders')
             ->where('cart_id', $cart_id)

@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Web\WebHomeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,7 +41,6 @@ Route::group(['prefix' => 'web', ['middleware' => ['XSS']], 'namespace' => 'Web'
 });
 
 Route::group(['prefix' => '', ['middleware' => ['XSS']], 'namespace' => 'Admin'], function () {
-
 	// for login
 	// Route::get('/', 'LoginController@adminLogin')->name('adminLogin');
 	Route::get('/', 'LoginController@home')->name('home');
@@ -193,7 +192,6 @@ Route::group(['prefix' => '', ['middleware' => ['XSS']], 'namespace' => 'Admin']
 		//for order value edit
 		Route::get('orderedit', 'Minimum_Max_OrderController@orderedit')->name('orderedit');
 		Route::post('amountupdate', 'Minimum_Max_OrderController@amountupdate')->name('amountupdate');
-		Route::get('orderedit', 'Minimum_Max_OrderController@orderedit')->name('orderedit');
 		// Route::post('amountupdate','Minimum_Max_OrderController@amountupdate')->name('amountupdate');
 		Route::post('amountupdatenew', 'Minimum_Max_OrderController@amountupdatenew')->name('amountupdatenew');
 		// for delivery time
@@ -308,6 +306,10 @@ Route::group(['prefix' => '', ['middleware' => ['XSS']], 'namespace' => 'Admin']
 		Route::get('bulk/upload', 'ImportExcelController@bulkup')->name('bulkup');
 		Route::post('bulk_upload', 'ImportExcelController@import')->name('bulk_upload');
 		Route::post('bulk_v_upload', 'ImportExcelController@import_varients')->name('bulk_v_upload');
+
+		//Admin User Rights
+		Route::get('admin_users/{id}/status/{status}','AdminController@status')->name('admin_users.status');
+		Route::resource('admin_users', 'AdminController');
 	});
 });
 
@@ -342,7 +344,6 @@ Route::group(['prefix' => 'store', ['middleware' => ['XSS']], 'namespace' => 'St
 		Route::get('orders/all', 'AssignorderController@allOrders')->name('storeAllOrders');
 		Route::get('get_orders', 'AssignorderController@getOrders')->name('storeGetOrders');
 		Route::get('orders/show/{id}', 'AssignorderController@showOrder')->name('storeShowOrder');
-
 
 		Route::get('orders/confirm/{cart_id}', 'AssignorderController@confirm_order')->name('store_confirm_order');
 		Route::get('orders/reject/{cart_id}', 'AssignorderController@reject_order')->name('store_reject_order');

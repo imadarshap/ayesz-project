@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helper\Helper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
@@ -16,6 +17,9 @@ class PagesController extends Controller
         $admin = DB::table('admin')
             ->where('admin_email', $admin_email)
             ->first();
+        if (!Helper::hasRight($admin->id, 'pages', 'Edit')) {
+            return abort(403);
+        }
         $logo = DB::table('tbl_web_setting')
             ->where('set_id', '1')
             ->first();
@@ -29,6 +33,13 @@ class PagesController extends Controller
 
     public function updateabout_us(Request $request)
     {
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if (!Helper::hasRight($admin->id, 'pages', 'Edit')) {
+            return abort(403);
+        }
         $title = "About Us";
         $description = $request->description;
         $check = DB::table('aboutuspage')
@@ -53,6 +64,13 @@ class PagesController extends Controller
 
     public function terms(Request $request)
     {
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if (!Helper::hasRight($admin->id, 'pages', 'Edit')) {
+            return abort(403);
+        }
         $title = "Terms & Condition";
         $admin_email = Session::get('bamaAdmin');
         $admin = DB::table('admin')
@@ -69,6 +87,13 @@ class PagesController extends Controller
 
     public function updateterms(Request $request)
     {
+        $admin_email = Session::get('bamaAdmin');
+        $admin = DB::table('admin')
+            ->where('admin_email', $admin_email)
+            ->first();
+        if (!Helper::hasRight($admin->id, 'pages', 'Edit')) {
+            return abort(403);
+        }
         $title = "Terms & Condition";
         $description = $request->description;
         $check = DB::table('termspage')
