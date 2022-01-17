@@ -4,9 +4,7 @@ namespace Database\seeds;
 
 use App\Helper\Helper;
 use Illuminate\Database\Seeder;
-use App\Models\Admin;
 use App\UserRight;
-use Illuminate\Support\Facades\DB;
 
 class AdminRightsSeeder extends Seeder
 {
