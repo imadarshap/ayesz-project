@@ -219,7 +219,7 @@
       <li class="{{ (request()->is('admin_users')) ? 'active' : '' }} nav-item">
         <a class="nav-link" href="{{route('admin_users.index')}}">
           <i class="material-icons">group</i>
-          <span class="menu-title">Admin Users</span>
+          <span class="menu-title">Admin Management</span>
         </a>
       </li>
       @endif
