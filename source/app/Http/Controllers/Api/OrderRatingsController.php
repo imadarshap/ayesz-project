@@ -18,14 +18,14 @@ class OrderRatingsController extends Controller
             }
             $orderRating = new OrderRating();
             $orderRating->order_id = $order->order_id;
-            $orderRating->review  = $request->order_review;
-            $orderRating->rating = $request->order_rating;
+            $orderRating->review  = !empty($request->order_review)?$request->order_review:null;
+            $orderRating->rating = !empty($request->order_rating)?$request->order_rating:null;
             $orderRating->save();
 
             $delRating = new DeliveryRating();
             $delRating->order_id = $order->order_id;
-            $delRating->review  = $request->delivery_review;
-            $delRating->rating = $request->delivery_rating;
+            $delRating->review  = !empty($request->delivery_review)?$request->delivery_review:null;
+            $delRating->rating = !empty($request->delivery_rating)?$request->delivery_rating:null;
             $delRating->save();
 
             $ratings = json_decode($request->ratings);
@@ -34,8 +34,8 @@ class OrderRatingsController extends Controller
                     $productRating = new OrderRating();
                     $productRating->order_id = $order->order_id;
                     $productRating->product_id = $rating->product_id;
-                    $productRating->review = $rating->review;
-                    $productRating->rating = $rating->rating;
+                    $productRating->review = (!empty($rating->review))?$rating->review:null;
+                    $productRating->rating = (!empty($rating->rating))?$rating->rating:null;
                     $productRating->save();
                 }
             }
