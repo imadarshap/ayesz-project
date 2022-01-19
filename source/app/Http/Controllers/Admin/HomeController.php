@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Helper\Helper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use DB;
-use Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
@@ -41,6 +41,7 @@ class HomeController extends Controller
 
         $pending =   DB::table('orders')
             ->where('order_status', 'Pending')
+            ->where('payment_method','!=',NULL)
             ->count();
 
 

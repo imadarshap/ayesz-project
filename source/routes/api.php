@@ -147,6 +147,7 @@ Route::group(['prefix' => '', ['middleware' => ['XSS']], 'namespace' => 'Api'], 
     Route::post('stores_by_category', 'CategoryController@stores_by_category');
     Route::post('products_by_store', 'CategoryController@products_by_store');
     Route::post('rate_order', 'OrderRatingsController@rateOrder');
+    Route::post('get_product_reviews', 'OrderRatingsController@getProductReviews');
 });
 
 Route::group(['prefix' => 'store', ['middleware' => ['XSS']], 'namespace' => 'Storeapi'], function () {

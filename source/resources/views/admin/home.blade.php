@@ -104,7 +104,7 @@
                 <div class="card-footer">
                   <div class="stats">
                     <i class="material-icons text-danger">layers</i>
-                    <a href="{{route('admin_pen_orders')}}">Total Pending Orders</a>
+                    <a href="{{route('allOrders')}}?order_status[]=Pending">Total Pending Orders</a>
                   </div>
                 </div>
               </div>
@@ -121,7 +121,7 @@
                <div class="card-footer">
                   <div class="stats">
                     <i class="material-icons text-danger">info_outline</i>
-                    <a href="{{route('admin_can_orders')}}">Total Cancelled Orders</a>
+                    <a href="{{route('allOrders')}}?order_status[]=Cancelled">Total Cancelled Orders</a>
                   </div>
                 </div>
               </div>
@@ -138,7 +138,7 @@
                  <div class="card-footer">
                   <div class="stats">
                     <i class="material-icons text-danger">face</i>
-                    <a href="{{route('admin_com_orders')}}">Completed Orders</a>
+                    <a href="{{route('allOrders')}}?order_status[]=Completed">Completed Orders</a>
                   </div>
                 </div>
               </div>

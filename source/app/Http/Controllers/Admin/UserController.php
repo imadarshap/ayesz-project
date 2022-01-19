@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Helper\Helper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use DB;
-use Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
@@ -17,7 +17,7 @@ class UserController extends Controller
     $admin = DB::table('admin')
         ->where('admin_email', $admin_email)
         ->first();
-    if (!Helper::hasRight($admin->id, 'users', 'View')) {
+    if (!Helper::hasRight($admin->id, 'customers', 'View')) {
         return abort(403);
     }
     $logo = DB::table('tbl_web_setting')
@@ -36,7 +36,7 @@ class UserController extends Controller
     $admin = DB::table('admin')
         ->where('admin_email', $admin_email)
         ->first();
-    if (!Helper::hasRight($admin->id, 'users', 'Edit')) {
+    if (!Helper::hasRight($admin->id, 'customers', 'Edit')) {
         return abort(403);
     }
     $user_id = $request->id;
@@ -56,7 +56,7 @@ class UserController extends Controller
     $admin = DB::table('admin')
         ->where('admin_email', $admin_email)
         ->first();
-    if (!Helper::hasRight($admin->id, 'users', 'View')) {
+    if (!Helper::hasRight($admin->id, 'customers', 'View')) {
         return abort(403);
     }
 
@@ -78,7 +78,7 @@ class UserController extends Controller
     $admin = DB::table('admin')
         ->where('admin_email', $admin_email)
         ->first();
-    if (!Helper::hasRight($admin->id, 'users', 'Delete')) {
+    if (!Helper::hasRight($admin->id, 'customers', 'Delete')) {
         return abort(403);
     }
 

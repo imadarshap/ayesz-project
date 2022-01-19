@@ -40,6 +40,22 @@ class OrderRatingsController extends Controller
                 }
             }
             return array("success"=>true,"message"=>'Thank You for Rating.');
+        }else{
+            return array("success"=>false,"message"=>'Insufficient Parameteres');
+        }
+    }
+
+    public function getProductReviews(Request $request){
+        if(!empty($request->product_id) && !empty($request->store_id)){
+            $reviews = OrderRating::where('product_id',$request->product_id)
+                        ->join('orders','orders.order_id','order_ratings.order_id')
+                        ->where('orders.store_id',$request->store_id)
+                        ->join('users','users.user_id','orders.user_id')
+                        ->select('order_ratings.*','users.user_name')
+                        ->get();
+            return array("success"=>true,'data'=>$reviews);
+        }else{
+            return array("success"=>false,"message"=>'Insufficient Parameteres','params'=>$request->store_id);
         }
     }
 }

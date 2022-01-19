@@ -79,8 +79,8 @@ class ReportController extends Controller
 			$orders = array();
 		}
 
-		$cities = DB::table('city')->get();
-
+		$allowedCities = explode(',',$admin->locations);
+        $cities = DB::table('city')->whereIn('city_name',$allowedCities)->get();
 
 		$orders_count = DB::table('orders')
 			->where('order_date', date('Y-m-d H:i:s'))
@@ -182,7 +182,8 @@ class ReportController extends Controller
 		}
 
 
-		$cities = DB::table('city')->get();
+		$allowedCities = explode(',',$admin->locations);
+        $cities = DB::table('city')->whereIn('city_name',$allowedCities)->get();
 
 
 		$orders_count = DB::table('orders')
@@ -293,11 +294,8 @@ class ReportController extends Controller
 			$orders = array();
 		}
 
-
-
-
-		$cities = DB::table('city')->get();
-
+		$allowedCities = explode(',',$admin->locations);
+        $cities = DB::table('city')->whereIn('city_name',$allowedCities)->get();
 
 		$orders_count = DB::table('orders')
 			->where('order_date', date('Y-m-d H:i:s'))
@@ -409,10 +407,8 @@ class ReportController extends Controller
 			$orders = array();
 		}
 
-
-
-
-		$cities = DB::table('city')->get();
+		$allowedCities = explode(',',$admin->locations);
+        $cities = DB::table('city')->whereIn('city_name',$allowedCities)->get();
 
 
 		$orders_count = DB::table('orders')
@@ -526,10 +522,8 @@ class ReportController extends Controller
 			$orders = array();
 		}
 
-
-
-
-		$cities = DB::table('city')->get();
+		$allowedCities = explode(',',$admin->locations);
+        $cities = DB::table('city')->whereIn('city_name',$allowedCities)->get();
 
 
 		$orders_count = DB::table('orders')
@@ -643,7 +637,8 @@ class ReportController extends Controller
 			$orders = array();
 		}
 
-		$cities = DB::table('city')->get();
+		$allowedCities = explode(',',$admin->locations);
+        $cities = DB::table('city')->whereIn('city_name',$allowedCities)->get();
 
 
 		$orders_count = DB::table('orders')
@@ -762,7 +757,8 @@ class ReportController extends Controller
 			$orders = array();
 		}
 
-		$cities = DB::table('city')->get();
+		$allowedCities = explode(',',$admin->locations);
+        $cities = DB::table('city')->whereIn('city_name',$allowedCities)->get();
 
 
 		$orders_count = DB::table('orders')
@@ -875,9 +871,8 @@ class ReportController extends Controller
 		}
 
 
-
-
-		$cities = DB::table('city')->get();
+		$allowedCities = explode(',',$admin->locations);
+        $cities = DB::table('city')->whereIn('city_name',$allowedCities)->get();
 
 
 		$orders_count = DB::table('orders')
@@ -988,7 +983,8 @@ class ReportController extends Controller
 			$orders = array();
 		}
 
-		$cities = DB::table('city')->get();
+		$allowedCities = explode(',',$admin->locations);
+        $cities = DB::table('city')->whereIn('city_name',$allowedCities)->get();
 
 
 		$orders_count = DB::table('orders')

@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Helper\Helper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use DB;
-use Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class StorePriorityController extends Controller
 {
@@ -23,8 +23,10 @@ class StorePriorityController extends Controller
         $logo = DB::table('tbl_web_setting')
             ->where('set_id', '1')
             ->first();
+        
 
-        $cities = DB::table('city')->get();
+        $allowedCities = explode(',',$admin->locations);
+        $cities = DB::table('city')->whereIn('city_name',$allowedCities)->get();
 
         $categories = DB::table('categories')->get();
 
