@@ -18,7 +18,7 @@ class ReportController extends Controller
 		$admin = DB::table('admin')
 			->where('admin_email', $admin_email)
 			->first();
-		if (!Helper::hasRight($admin->id, 'reports', 'View')) {
+		if (!Helper::hasRight($admin->id, 'reports', 'View') && !Helper::hasRight($admin->id, 'report_by_vendor_payment', 'View')) {
 			return abort(403);
 		}
 		$logo = DB::table('tbl_web_setting')
@@ -139,7 +139,7 @@ class ReportController extends Controller
 		$admin = DB::table('admin')
 			->where('admin_email', $admin_email)
 			->first();
-		if (!Helper::hasRight($admin->id, 'reports', 'View')) {
+		if (!Helper::hasRight($admin->id, 'reports', 'View') && !Helper::hasRight($admin->id, 'report_by_payment_mode', 'View')) {
 			return abort(403);
 		}
 		$logo = DB::table('tbl_web_setting')
@@ -242,7 +242,7 @@ class ReportController extends Controller
 		$admin = DB::table('admin')
 			->where('admin_email', $admin_email)
 			->first();
-		if (!Helper::hasRight($admin->id, 'reports', 'View')) {
+		if (!Helper::hasRight($admin->id, 'reports', 'View') && !Helper::hasRight($admin->id, 'report_by_vendor_orders', 'View')) {
 			return abort(403);
 		}
 		$logo = DB::table('tbl_web_setting')
@@ -355,7 +355,7 @@ class ReportController extends Controller
 		$admin = DB::table('admin')
 			->where('admin_email', $admin_email)
 			->first();
-		if (!Helper::hasRight($admin->id, 'reports', 'View')) {
+		if (!Helper::hasRight($admin->id, 'reports', 'View') && !Helper::hasRight($admin->id, 'report_by_products', 'View')) {
 			return abort(403);
 		}
 		$logo = DB::table('tbl_web_setting')
@@ -470,7 +470,7 @@ class ReportController extends Controller
 		$admin = DB::table('admin')
 			->where('admin_email', $admin_email)
 			->first();
-		if (!Helper::hasRight($admin->id, 'reports', 'View')) {
+		if (!Helper::hasRight($admin->id, 'reports', 'View') && !Helper::hasRight($admin->id, 'report_by_vendors', 'View')) {
 			return abort(403);
 		}
 		$logo = DB::table('tbl_web_setting')
@@ -585,7 +585,7 @@ class ReportController extends Controller
 		$admin = DB::table('admin')
 			->where('admin_email', $admin_email)
 			->first();
-		if (!Helper::hasRight($admin->id, 'reports', 'View')) {
+		if (!Helper::hasRight($admin->id, 'reports', 'View') && !Helper::hasRight($admin->id, 'report_by_delivery_agent', 'View')) {
 			return abort(403);
 		}
 		$logo = DB::table('tbl_web_setting')
@@ -697,7 +697,7 @@ class ReportController extends Controller
 		$admin = DB::table('admin')
 			->where('admin_email', $admin_email)
 			->first();
-		if (!Helper::hasRight($admin->id, 'reports', 'View')) {
+		if (!Helper::hasRight($admin->id, 'reports', 'View') && !Helper::hasRight($admin->id, 'report_by_order_status', 'View')) {
 			return abort(403);
 		}
 		$logo = DB::table('tbl_web_setting')
@@ -817,7 +817,7 @@ class ReportController extends Controller
 		$admin = DB::table('admin')
 			->where('admin_email', $admin_email)
 			->first();
-		if (!Helper::hasRight($admin->id, 'reports', 'View')) {
+		if (!Helper::hasRight($admin->id, 'reports', 'View') && !Helper::hasRight($admin->id, 'report_by_vendor_order_status', 'View')) {
 			return abort(403);
 		}
 		$logo = DB::table('tbl_web_setting')
@@ -931,7 +931,7 @@ class ReportController extends Controller
 		$admin = DB::table('admin')
 			->where('admin_email', $admin_email)
 			->first();
-		if (!Helper::hasRight($admin->id, 'reports', 'View')) {
+		if (!Helper::hasRight($admin->id, 'reports', 'View') && !Helper::hasRight($admin->id, 'report_by_dboy_order_status', 'View')) {
 			return abort(403);
 		}
 		$logo = DB::table('tbl_web_setting')
@@ -1043,7 +1043,7 @@ class ReportController extends Controller
 		$admin = DB::table('admin')
 			->where('admin_email', $admin_email)
 			->first();
-		if (!Helper::hasRight($admin->id, 'reports', 'View')) {
+		if (!Helper::hasRight($admin->id, 'reports', 'View') && !Helper::hasRight($admin->id, 'reports', 'View')) {
 			return abort(403);
 		}
 		$city = $request->city;
@@ -1083,7 +1083,7 @@ class ReportController extends Controller
 		$admin = DB::table('admin')
 			->where('admin_email', $admin_email)
 			->first();
-		if (!Helper::hasRight($admin->id, 'stores', 'View') && !Helper::hasRight($admin->id, 'delivery_agent', 'View')) {
+		if (!Helper::hasRight($admin->id, 'reports', 'View') && !Helper::hasRight($admin->id, 'stores', 'View') && !Helper::hasRight($admin->id, 'reports', 'View') && !Helper::hasRight($admin->id, 'delivery_agent', 'View')) {
 			return abort(403);
 		}
 		$stores = DB::table('store')

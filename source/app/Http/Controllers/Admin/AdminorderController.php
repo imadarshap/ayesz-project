@@ -35,7 +35,10 @@ class AdminorderController extends Controller
             ->first();
         $currency = DB::table('currency')->first()->currency_sign;
 
-        return view('admin.all_orders.list', compact('title', 'logo', 'admin', 'currency', 'request'));
+        $allowedCities = explode(',',$admin->locations);
+        $cities = DB::table('city')->whereIn('city_name',$allowedCities)->get();
+
+        return view('admin.all_orders.list', compact('title', 'logo', 'admin', 'currency', 'request', 'cities'));
     }
 
     public function getOrders(Request $request)
@@ -88,6 +91,25 @@ class AdminorderController extends Controller
             $columnName = $columnName_arr[$columnIndex]['data']; // Column name
             $columnSortOrder = $order_arr[0]['dir']; // asc or desc
             $records = $records->orderBy($columnName, $columnSortOrder);
+        }
+
+        if(!empty($request->city)){
+            $records = $records->where('store.city',$request->city);
+        }else{
+            $allowedCities = explode(',',$admin->locations);
+            $records = $records->whereIn('store.city',$allowedCities);
+        }
+
+        $fromDate = $request->fromdate;
+		$toDate = $request->todate;
+
+        if (!empty($fromDate) && !empty($toDate)) {
+            $records = $records->where('orders.order_date', '>=', $fromDate)
+                ->where('orders.order_date', '<=', $toDate);
+        } else if (!empty($fromDate) && empty($toDate)) {
+            $records = $records->where('orders.order_date', $fromDate);
+        } else if (empty($fromDate) && !empty($toDate)) {
+            $records = $records->where('orders.order_date', '<=', $toDate);
         }
 
         if (!empty($request->order_status)) {

@@ -142,33 +142,51 @@
         </a>
         <div class="collapse {{ (request()->is('report')) ? 'show' : '' }} {{ (request()->is('report/report_by_vindoe_list')) ? 'show' : '' }} {{ (request()->is('report/report_by_product_list')) ? 'show' : '' }} {{ (request()->is('report/payment-mode')) ? 'show' : '' }} {{ (request()->is('report/vendor')) ? 'show' : '' }} {{ (request()->is('report/delivery-agent')) ? 'show' : '' }} {{ (request()->is('report/order-status')) ? 'show' : '' }}  {{ (request()->is('report/vendor-order-status')) ? 'show' : '' }}{{ (request()->is('report/delivery-agent-order-status')) ? 'show' : '' }}" id="report-dropdown">
           <ul class="nav flex-column sub-menu">
+            @if(Helper::hasRight($admin->id,'report_by_products','View'))
             <li class="nav-item">
               <a class="{{ (request()->is('report/report_by_product_list')) ? 'activate' : '' }} nav-link" href="{{route('report/report_by_product_list')}}">Report By Product List</a>
             </li>
+            @endif
+            @if(Helper::hasRight($admin->id,'report_by_vendors','View'))
             <li class="nav-item">
               <a class="{{ (request()->is('report/report_by_vindoe_list')) ? 'activate' : '' }} nav-link" href="{{route('report/report_by_vindoe_list')}}">Report By Vendor List</a>
             </li>
+            @endif
+            @if(Helper::hasRight($admin->id,'report_by_vendor_payment','View'))
             <li class="nav-item">
               <a class="{{ (request()->is('report')) ? 'activate' : '' }} nav-link" href="{{route('report')}}">Vendor Payment Report</a>
             </li>
+            @endif
+            @if(Helper::hasRight($admin->id,'report_by_payment_mode','View'))
             <li class="nav-item">
               <a class="{{ (request()->is('report/payment-mode')) ? 'activate' : '' }} nav-link" href="{{route('report/payment-mode')}}">Payment Mode</a>
             </li>
+            @endif
+            @if(Helper::hasRight($admin->id,'report_by_vendor_orders','View'))
             <li class="nav-item">
-              <a class="{{ (request()->is('report/vendor')) ? 'activate' : '' }} nav-link" href="{{route('report/vendor')}}">Vendor Report</a>
+              <a class="{{ (request()->is('report/vendor')) ? 'activate' : '' }} nav-link" href="{{route('report/vendor')}}">Vendor Orders Report</a>
             </li>
+            @endif
+            @if(Helper::hasRight($admin->id,'report_by_delivery_agent','View'))
             <li class="nav-item">
               <a class="{{ (request()->is('report/delivery-agent')) ? 'activate' : '' }} nav-link" href="{{route('report/delivery-agent')}}">Delivery Agent Report</a>
             </li>
+            @endif
+            @if(Helper::hasRight($admin->id,'report_by_order_status','View'))
             <li class="nav-item">
               <a class="{{ (request()->is('report/order-status')) ? 'activate' : '' }} nav-link" href="{{route('report/order-status')}}">Order Status Report</a>
             </li>
+            @endif
+            @if(Helper::hasRight($admin->id,'report_by_vendor_order_status','View'))
             <li class="nav-item">
               <a class="{{ (request()->is('report/vendor-order-status')) ? 'activate' : '' }} nav-link" href="{{route('report/vendor-order-status')}}">Vendor Order Status</a>
             </li>
+            @endif
+            @if(Helper::hasRight($admin->id,'report_by_dboy_order_status','View'))
             <li class="nav-item">
               <a class="{{ (request()->is('report/delivery-agent-order-status')) ? 'activate' : '' }} nav-link" href="{{route('report/delivery-agent-order-status')}}">Delivery Agent Order Status</a>
             </li>
+            @endif
           </ul>
         </div>
       </li>

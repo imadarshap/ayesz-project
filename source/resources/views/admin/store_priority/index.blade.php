@@ -248,7 +248,7 @@
 					loader.css('opacity',1);
 					$.ajax({
 						type: "POST",
-						url: '{{route('set_store_priority')}}',
+						url: "{{route('set_store_priority')}}",
 						data: new FormData(this),
 						dataType:'json',
 						contentType: false,

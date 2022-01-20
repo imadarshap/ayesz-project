@@ -1,13 +1,41 @@
 @extends('admin.layout.app')
+@section ('content')
 <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
 <style>
     .material-icons {
         margin-top: 0px !important;
         margin-bottom: 0px !important;
     }
+    .bootstrap-select button.btn.dropdown-toggle.btn-light,
+  .form-input {
+    position: relative;
+    width: 100%;
+    text-align: left;
+    border: 1px solid #aaa;
+    background-color: #fff;
+    padding: 7.5px 7px 7.5px 5px;
+    margin-top: 2px;
+    font-size: 13px;
+    color: #555;
+    outline-offset: -2px;
+    white-space: nowrap;
+    border-radius: 0px;
+    text-transform: none;
+    box-shadow: none;
+  }
+
+  .bootstrap-select .dropdown-toggle .filter-option-inner-inner {
+    margin-right: 10px;
+  }
+
+  .dropdown.bootstrap-select {
+    width: 250px !important;
+  }
 </style>
-@section ('content')
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
@@ -41,9 +69,20 @@
                     <h4 class="card-title ">{{$title}}</h4>
                 </div>
                 <div class="container"> <br>
-                        <form id="form_report" mehtod="get" action="">
-                    <div class="row">
-                            <div class="col-md-4">
+                    <form id="form_report" mehtod="get" action="">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form">
+                                <label class="bmd-label-floating">City</label>
+                                <select name="city" id="city" class="selectpicker" data-live-search="true">
+                                    <option value="">-None-</option>
+                                    @foreach($cities as $city)
+                                    <option value="{{$city->city_name}}" @if($request->city==$city->city_name) selected="" @endif>{{$city->city_name}}</option>
+                                    @endforeach
+                                </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <div class="form">
                                     <label class="bmd-label-floating">Select Order Status</label>
                                     <select name="order_status[]" id="order_status" class="form-input" multiple>
@@ -61,13 +100,26 @@
                                     </select>
                                 </div>
                             </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                        <button type="submit" class="btn btn-primary pull-center mt-2">Submit</button></div>
-                    </div>
-                        </form>
-                        <hr>
+                            <div class="col-md-3">
+                                <div class="form">
+                                <label class="bmd-label-floating">From Date</label>
+                                <input type="text" name="fromdate" value="{{$request->fromdate}}" id="fromdate" class="form-input datepicker" placeholder="Select a date" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form">
+                                <label class="bmd-label-floating">To Date</label>
+                                <input type="text" name="todate" id="todate" value="{{$request->todate}}" class="form-input datepicker" placeholder="Select a date" />
+                                </div>
+                            </div>
+                        </div>                       
+                        <div class="row">
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary pull-center mt-2">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
                     <table class="display" id="myTable" data-ordering="false">
                         <thead>
                             <tr>
@@ -91,16 +143,41 @@
 
 <script>
     $(document).ready(function() {
+        $('#fromdate').datetimepicker({
+            useCurrent: false,
+            maxDate: new Date(),
+            format: 'YYYY-MM-DD',
+        });
+
+        @if(!empty($request-> fromdate))
+        $('#fromdate').data("DateTimePicker").date('{{$request->fromdate}}');
+        @endif
+
+        $('#todate').datetimepicker({
+            useCurrent: false,
+            maxDate: new Date(),
+            format: 'YYYY-MM-DD',
+        });
+        $("#fromdate").on("dp.change", function(e) {
+            $('#todate').data("DateTimePicker").minDate(e.date);
+        });
+        $("#todate").on("dp.change", function(e) {
+            $('#fromdate').data("DateTimePicker").maxDate(e.date);
+        });
         // $('#myTable').DataTable();
         $('select[multiple]').multiselect({
             columns: 1,
             search: true,
             selectAll: true,
         });
+        var url = "{{route('getOrders')}}?order_status=@if(!empty($request->order_status)){{implode(',',$request->order_status)}}@endif"
+                    +"&fromdate=@if(!empty($request->fromdate)){{$request->fromdate}}@endif"
+                    +"&todate=@if(!empty($request->todate)){{$request->todate}}@endif"
+                    +"&city=@if(!empty($request->city)){{$request->city}}@endif";
         $('#myTable').DataTable({
             "processing": true,
             "serverSide": true,
-            "ajax": "{{route('getOrders')}}?order_status=@if(!empty($request->order_status)){{implode(',',$request->order_status)}}@endif",
+            "ajax": url,
             "drawCallback": function(settings) {
 
             },
@@ -157,8 +234,8 @@
                     sortable: false,
                     searchable: false,
                     render: function(order_id) {
-                        return '<div class="text-right">'
-                            +'<a href="' + "{{url('admin/orders/edit')}}/" + order_id + '" rel="tooltip" class="btn btn-success btn-sm">' +
+                        return '<div class="text-right">' +
+                            '<a href="' + "{{url('admin/orders/edit')}}/" + order_id + '" rel="tooltip" class="btn btn-success btn-sm">' +
                             '<i class="material-icons">edit</i>' +
                             '</a></div>';
                     }
