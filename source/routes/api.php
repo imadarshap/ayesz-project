@@ -48,12 +48,10 @@ Route::group(['prefix' => '', ['middleware' => ['XSS']], 'namespace' => 'Api'], 
     Route::post('dealproduct', 'CategoryController@dealproduct');
 
     //orders//
-    Route::post('make_an_order', 'OrderController@order');
     Route::post('ongoing_orders', 'OrderController@ongoing');
     Route::get('cancelling_reasons', 'OrderController@cancel_for');
     Route::post('delete_order', 'OrderController@delete_order');
     Route::post('top_selling', 'OrderController@top_selling');
-    Route::post('checkout', 'OrderController@checkout');
     Route::post('completed_orders', 'OrderController@completed_orders');
     Route::post('recentselling', 'OrderController@recentselling');
 
@@ -89,7 +87,6 @@ Route::group(['prefix' => '', ['middleware' => ['XSS']], 'namespace' => 'Api'], 
     Route::post('cat_product', 'CategoryController@cat_product');
 
     //wallet
-    Route::post('recharge_wallet', 'WalletController@add_credit');
     Route::post('totalbill', 'WalletController@totalbill');
     Route::post('show_recharge_history', 'WalletController@show_recharge_history');
     Route::post('create_wallet_order', 'WalletController@createWalletOrder');
@@ -148,6 +145,17 @@ Route::group(['prefix' => '', ['middleware' => ['XSS']], 'namespace' => 'Api'], 
     Route::post('products_by_store', 'CategoryController@products_by_store');
     Route::post('rate_order', 'OrderRatingsController@rateOrder');
     Route::post('get_product_reviews', 'OrderRatingsController@getProductReviews');
+
+    //New Order API'S
+    Route::post('create_order', 'OrderController@createOrder');
+    Route::post('place_order', 'OrderController@placeOrder');
+    Route::post('confirm_wallet_recharge', 'WalletController@confirmWalletRecharge');
+    
+
+    //To be Deleted after 2.0 update
+    Route::post('make_an_order', 'OrderController@order');
+    Route::post('checkout', 'OrderController@checkout');
+    Route::post('recharge_wallet', 'WalletController@add_credit');
 });
 
 Route::group(['prefix' => 'store', ['middleware' => ['XSS']], 'namespace' => 'Storeapi'], function () {
