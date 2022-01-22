@@ -72,7 +72,6 @@ class AdminorderController extends Controller
             ->leftjoin('users', 'users.user_id', 'orders.user_id')
             ->leftJoin('store', 'store.store_id', 'orders.store_id')
             ->leftJoin('delivery_boy', 'delivery_boy.dboy_id', 'orders.dboy_id')
-            ->where('payment_method', '!=', NULL)
             ->orderBy('created_at','DESC')
             ->select(
                 'orders.*',

@@ -163,7 +163,7 @@ class OrderController extends Controller
                         ->where('coupon_id', $coupon->coupon_id)
                         ->where('user_id', $user_id)
                         ->where('payment_method','!=',NULL)
-                        ->whereIn(['Pending','Confirmed','Accepted_By_Delivery_Agent','Out_For_Delivery','Completed'])
+                        ->whereIn('order_status',['Pending','Confirmed','Accepted_By_Delivery_Agent','Out_For_Delivery','Completed'])
                         ->count();
 
                     if ($coupon->uses_restriction > $check_uses) {
@@ -273,7 +273,6 @@ class OrderController extends Controller
         if(!empty($request->payment_id)){
             $paymentId = $request->payment_id;
             $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
-            // $payment = $api->payment->fetch($paymentId);
             $rp_order = $api->order->fetch($orderr->payment_order_id)->payments();
             if(empty($rp_order)){
                 return array('status'=>'0', 'message'=>'Invalid Payment');

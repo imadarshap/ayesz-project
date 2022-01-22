@@ -38,10 +38,8 @@ class HomeController extends Controller
         $stores = DB::table('store')
             ->count();
 
-
         $pending =   DB::table('orders')
             ->where('order_status', 'Pending')
-            ->where('payment_method','!=',NULL)
             ->count();
 
 
