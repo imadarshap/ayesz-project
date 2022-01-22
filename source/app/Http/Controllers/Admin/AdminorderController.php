@@ -358,7 +358,6 @@ class AdminorderController extends Controller
             ->join('users', 'orders.user_id', '=', 'users.user_id')
             ->orderBy('orders.order_id', 'DESC')
             ->where('orders.order_status', 'Pending')
-            ->where('orders.payment_method', '!=', null)
             //  ->orWhere('orders.order_status', 'Out_For_Delivery')
             //  ->orWhere('orders.order_status', 'Confirmed')
             //  ->orWhere('orders.order_status', 'Accepted_By_Delivery_Agent')
