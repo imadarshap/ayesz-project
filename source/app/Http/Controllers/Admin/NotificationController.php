@@ -34,7 +34,7 @@ class NotificationController extends Controller
 		$admin = DB::table('admin')
 			->where('admin_email', $admin_email)
 			->first();
-		if (!Helper::hasRight($admin->id, 'notifications', 'Add')) {
+		if (!Helper::hasRight($admin->id, 'notifications', 'View')) {
 			return abort(403);
 		}
         $this->validate(
@@ -128,8 +128,6 @@ class NotificationController extends Controller
         return redirect()->back()->withSuccess('notification send successfully');
     }
 
-
-
     public function Notification_to_store(Request $request)
     {
         $title = "To Store";
@@ -137,7 +135,7 @@ class NotificationController extends Controller
 		$admin = DB::table('admin')
 			->where('admin_email', $admin_email)
 			->first();
-		if (!Helper::hasRight($admin->id, 'delivery_charges', 'Add')) {
+		if (!Helper::hasRight($admin->id, 'notifications', 'View')) {
 			return abort(403);
 		}
         $logo = DB::table('tbl_web_setting')
@@ -153,7 +151,7 @@ class NotificationController extends Controller
 		$admin = DB::table('admin')
 			->where('admin_email', $admin_email)
 			->first();
-		if (!Helper::hasRight($admin->id, 'notifications', 'Add')) {
+		if (!Helper::hasRight($admin->id, 'notifications', 'View')) {
 			return abort(403);
 		}
         $this->validate(

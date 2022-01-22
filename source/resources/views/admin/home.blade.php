@@ -104,7 +104,7 @@
                 <div class="card-footer">
                   <div class="stats">
                     <i class="material-icons text-danger">layers</i>
-                    <a href="{{route('allOrders')}}?order_status[]=Pending">Total Pending Orders</a>
+                    <a href="{{route('admin_pen_orders')}}">Total Pending Orders</a>
                   </div>
                 </div>
               </div>
