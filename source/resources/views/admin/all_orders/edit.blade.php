@@ -225,14 +225,14 @@
       $('#item_total_price').html(total_price);
       var grandTotal = total_price+parseFloat($('#delivery_charge').val());
       $('#grand_total').html(grandTotal);
-      $('#rem_price').html(grandTotal-parseFloat($('#paid_by_wallet').val()));
+      $('#rem_price').html(grandTotal-parseFloat($('#paid_by_wallet').val())-parseFloat($('#discount').html()));
     });
 
     $('#paid_by_wallet').on('input',function(){
       if($(this).val().trim() == '')
         $(this).val('0');
       var grandTotal = $('#grand_total').html();
-      var remPrice = parseFloat(grandTotal)-parseFloat($(this).val());
+      var remPrice = parseFloat(grandTotal)-parseFloat($(this).val())-parseFloat($('#discount').html());
       $('#rem_price').html(remPrice);
       if(parseFloat($('#rem_price').html())<0){
         $(this).val('0');
@@ -242,7 +242,7 @@
         });
         var grandTotal = total_price+parseFloat($('#delivery_charge').val());
         $('#grand_total').html(grandTotal);
-        $('#rem_price').html(grandTotal-parseFloat($('#paid_by_wallet').val()));
+        $('#rem_price').html(grandTotal-parseFloat($('#paid_by_wallet').val())-parseFloat($('#discount').html()));
       }
     });
 
@@ -252,7 +252,7 @@
       var total_price = $('#item_total_price').html();
       var grandTotal = parseFloat(total_price)+parseFloat($(this).val());
       $('#grand_total').html(grandTotal);
-      $('#rem_price').html(grandTotal-parseFloat($('#paid_by_wallet').val()));
+      $('#rem_price').html(grandTotal-parseFloat($('#paid_by_wallet').val())-parseFloat($('#discount').html()));
     });
   });
 </script>

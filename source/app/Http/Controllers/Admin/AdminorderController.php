@@ -317,7 +317,7 @@ class AdminorderController extends Controller
             }
             $order->price_without_delivery = $item_total_price;
             $order->total_price = $item_total_price + $order->delivery_charge;
-            $order->rem_price = $item_total_price + $order->delivery_charge - $order->discount - $order->paid_by_wallet;
+            $order->rem_price = $item_total_price + $order->delivery_charge - $order->coupon_discount - $order->paid_by_wallet;
             $order->save();
             return redirect()->back()->withSuccess($success)->withErrors($errors);
         } else {
