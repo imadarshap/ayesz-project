@@ -129,6 +129,7 @@
                                 <th>User</th>
                                 <th>Store</th>
                                 <th>Agent</th>
+                                <th>Pay Mode</th>
                                 <th>Order Date</th>
                                 <th>Status</th>
                                 <th class="text-right">Action</th>
@@ -221,6 +222,12 @@
                             return data.boy_name + '<p style="font-size:14px;margin-bottom:0px">(' + data.boy_phone + ')</p>';
                         else
                             return '-';
+                    }
+                },
+                {
+                    data: {payment_method: 'payment_method', payment_status: 'payment_status'},
+                    render: function(data){
+                        return ((data.payment_method!=null) ? data.payment_method:'') + ' ' +(data.payment_status!=null? "(" + data.payment_status + ")":"");
                     }
                 },
                 {

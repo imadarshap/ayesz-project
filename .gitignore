@@ -20,3 +20,4 @@
 /source/Homestead.json
 /source/.vagrant
 /source/.phpunit.result.cache
+/source/storage/logs/laravel.log

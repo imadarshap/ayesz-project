@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class CouponController extends Controller
 {
@@ -32,7 +32,7 @@ class CouponController extends Controller
             ->where('coupon_id', $coupon->coupon_id)
             ->where('user_id', $user_id)
             ->where('payment_method','!=',NULL)
-            ->whereIn(['Pending','Confirmed','Accepted_By_Delivery_Agent','Out_For_Delivery','Completed'])
+            ->whereIn('order_status',['Pending','Confirmed','Accepted_By_Delivery_Agent','Out_For_Delivery','Completed'])
             ->count();
 
         if ($coupon->uses_restriction > $check2) {

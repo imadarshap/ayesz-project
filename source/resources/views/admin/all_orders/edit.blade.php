@@ -156,7 +156,7 @@
                 </tr>
                 <tr>
                   <td>Paid By Wallet</td>
-                  <td>{{$currency}}<span id="paid_by_wallet">{{$order->paid_by_wallet}}</span></td>
+                  <td>{{$currency}} <input type="number" id="paid_by_wallet" name="paid_by_wallet" value="{{$order->paid_by_wallet}}" required /></td>
                 </tr>
                 <tr>
                   <td>Discount</td>
@@ -225,15 +225,34 @@
       $('#item_total_price').html(total_price);
       var grandTotal = total_price+parseFloat($('#delivery_charge').val());
       $('#grand_total').html(grandTotal);
-      $('#rem_price').html(grandTotal-parseFloat($('#paid_by_wallet').html()));
+      $('#rem_price').html(grandTotal-parseFloat($('#paid_by_wallet').val()));
     });
+
+    $('#paid_by_wallet').on('input',function(){
+      if($(this).val().trim() == '')
+        $(this).val('0');
+      var grandTotal = $('#grand_total').html();
+      var remPrice = parseFloat(grandTotal)-parseFloat($(this).val());
+      $('#rem_price').html(remPrice);
+      if(parseFloat($('#rem_price').html())<0){
+        $(this).val('0');
+        var total_price = 0;
+        $(".item_price").each(function() {
+          total_price += parseFloat($(this).val());
+        });
+        var grandTotal = total_price+parseFloat($('#delivery_charge').val());
+        $('#grand_total').html(grandTotal);
+        $('#rem_price').html(grandTotal-parseFloat($('#paid_by_wallet').val()));
+      }
+    });
+
     $('#delivery_charge').on('input',function(){
       if($(this).val().trim() == '')
         $(this).val('0');
       var total_price = $('#item_total_price').html();
       var grandTotal = parseFloat(total_price)+parseFloat($(this).val());
       $('#grand_total').html(grandTotal);
-      $('#rem_price').html(grandTotal-parseFloat($('#paid_by_wallet').html()));
+      $('#rem_price').html(grandTotal-parseFloat($('#paid_by_wallet').val()));
     });
   });
 </script>

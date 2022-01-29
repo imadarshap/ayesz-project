@@ -1546,7 +1546,7 @@ class OrderController extends Controller
                                 if (strtolower(date('D', strtotime(' +1 day'))) == $avails[$i]->day)
                                     $openTime = "will open tomorrow at " . $st_time->format('h:i a');
                                 else
-                                    $openTime = "will open on " . getFullDay($avails[$i]->day) . " at " . $st_time->format('h:i a');
+                                    $openTime = "will open on " . Helper::getFullDay($avails[$i]->day) . " at " . $st_time->format('h:i a');
                             }
                             $will_open = true;
                             break;
