@@ -231,7 +231,10 @@
                     }
                 },
                 {
-                    data: 'created_at'
+                    data: {order_date: 'order_date', time_slot: 'time_slot', created_at: 'created_at'},
+                    render: function(data){
+                        return data.order_date+ ' ' +data.time_slot;
+                    }
                 },
                 {
                     data: 'order_status'
