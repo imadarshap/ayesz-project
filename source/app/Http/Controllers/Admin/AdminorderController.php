@@ -73,10 +73,6 @@ class AdminorderController extends Controller
 
         // Fetch records
         $records = DB::table('orders')
-            ->where('orders.cart_id', 'like', '%' . $searchValue . '%')
-            ->orWhere('users.user_name', 'like', '%' . $searchValue . '%')
-            ->orWhere('store.store_name', 'like', '%' . $searchValue . '%')
-            ->orWhere('delivery_boy.boy_name', 'like', '%' . $searchValue . '%')
             ->leftjoin('users', 'users.user_id', 'orders.user_id')
             ->leftJoin('store', 'store.store_id', 'orders.store_id')
             ->leftJoin('delivery_boy', 'delivery_boy.dboy_id', 'orders.dboy_id')
@@ -142,6 +138,13 @@ class AdminorderController extends Controller
             $records = $records->whereIn('orders.order_status', $orderStatus);
             $totalRecords = $totalRecords->whereIn('orders.order_status', $orderStatus);
             $totalRecordswithFilter = $totalRecordswithFilter->whereIn('orders.order_status', $orderStatus);
+        }
+
+        if(!empty($searchValue)){
+            $records = $records->where('orders.cart_id', 'like', '%' . $searchValue . '%')
+            ->orWhere('users.user_name', 'like', '%' . $searchValue . '%')
+            ->orWhere('store.store_name', 'like', '%' . $searchValue . '%')
+            ->orWhere('delivery_boy.boy_name', 'like', '%' . $searchValue . '%');
         }
 
         $records = $records->get();
