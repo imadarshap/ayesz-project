@@ -65,11 +65,7 @@ class AdminorderController extends Controller
         $totalRecordswithFilter = DB::table('orders')->select('count(*) as allcount')
             ->leftjoin('users', 'users.user_id', 'orders.user_id')
             ->leftJoin('store', 'store.store_id', 'orders.store_id')
-            ->leftJoin('delivery_boy', 'delivery_boy.dboy_id', 'orders.dboy_id')
-            ->where('cart_id', 'like', '%' . $searchValue . '%')
-            ->orWhere('users.user_name', 'like', '%' . $searchValue . '%')
-            ->orWhere('store.store_name', 'like', '%' . $searchValue . '%')
-            ->orWhere('delivery_boy.boy_name', 'like', '%' . $searchValue . '%');
+            ->leftJoin('delivery_boy', 'delivery_boy.dboy_id', 'orders.dboy_id');
 
         // Fetch records
         $records = DB::table('orders')
@@ -142,6 +138,11 @@ class AdminorderController extends Controller
 
         if(!empty($searchValue)){
             $records = $records->where('orders.cart_id', 'like', '%' . $searchValue . '%')
+            ->orWhere('users.user_name', 'like', '%' . $searchValue . '%')
+            ->orWhere('store.store_name', 'like', '%' . $searchValue . '%')
+            ->orWhere('delivery_boy.boy_name', 'like', '%' . $searchValue . '%');
+
+            $totalRecordswithFilter = $totalRecordswithFilter->where('cart_id', 'like', '%' . $searchValue . '%')
             ->orWhere('users.user_name', 'like', '%' . $searchValue . '%')
             ->orWhere('store.store_name', 'like', '%' . $searchValue . '%')
             ->orWhere('delivery_boy.boy_name', 'like', '%' . $searchValue . '%');
